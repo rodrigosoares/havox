@@ -6,6 +6,8 @@ module HavoxRoutes
   class << self
     attr_accessor :configuration
 
+    ENTRY_REGEX = /^\w.*\s((?:[0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2}).*$/
+
     private
 
     def route_command(vm_name, protocol)
@@ -16,6 +18,10 @@ module HavoxRoutes
       Net::SSH.start(configuration.rf_host, configuration.rf_user, password: configuration.rf_password) do |ssh|
         yield(ssh)
       end
+    end
+
+    def parse_routes(table_str)
+      table_str.scan(ENTRY_REGEX).flatten
     end
   end
 
@@ -33,7 +39,8 @@ module HavoxRoutes
 
   def self.fetch(vm_name, protocol = configuration.protocol)
     ssh_connection do |ssh|
-      ssh.exec!(route_command(vm_name, protocol))
+      output = ssh.exec!(route_command(vm_name, protocol))
+      parse_routes(output)
     end
   end
 
@@ -41,7 +48,8 @@ module HavoxRoutes
     routes = {}
     ssh_connection do |ssh|
       configuration.rf_vm_names.each do |vm_name|
-        routes[vm_name] = ssh.exec!(route_command(vm_name, protocol))
+        output = ssh.exec!(route_command(vm_name, protocol))
+        routes[vm_name] = parse_routes(output)
       end
     end
     routes
