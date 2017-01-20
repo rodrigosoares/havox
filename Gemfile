@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in havox_routes.gemspec
+# Specify your gem's dependencies in havox.gemspec
 gemspec

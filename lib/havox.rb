@@ -1,8 +1,8 @@
-require 'havox_routes/version'
-require 'havox_routes/configuration'
+require 'havox/version'
+require 'havox/configuration'
 require 'net/ssh'
 
-module HavoxRoutes
+module Havox
   class << self
     attr_accessor :configuration
 

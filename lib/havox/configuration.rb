@@ -1,4 +1,4 @@
-module HavoxRoutes
+module Havox
   class Configuration
     attr_accessor :protocol, :rf_host, :rf_user, :rf_password, :rf_vm_names
 

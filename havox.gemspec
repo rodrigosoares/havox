@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'havox_routes/version'
+require 'havox/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'havox_routes'
-  spec.version       = HavoxRoutes::VERSION
+  spec.name          = 'havox'
+  spec.version       = Havox::VERSION
   spec.authors       = ['Rodrigo Soares']
   spec.email         = ['silvars1@gmail.com']
 
   spec.summary       = %q{This gem parses the RIBs from RouteFlow VMs.}
   spec.description   = %q{This gem parses the RIBs from RouteFlow VMs.}
-  spec.homepage      = 'https://github.com/rodrigosoares/havox_routes'
+  spec.homepage      = 'https://github.com/rodrigosoares/havox'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
