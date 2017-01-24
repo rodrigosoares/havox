@@ -1,5 +1,6 @@
 require 'havox/version'
 require 'havox/configuration'
+require 'havox/command'
 require 'havox/routes'
 require 'net/ssh'
 

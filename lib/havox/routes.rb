@@ -1,5 +1,7 @@
 module Havox
   module Routes
+    include Havox::Command
+
     class << self
       ENTRY_REGEX = /^\w.*\s((?:[0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2}).*$/
 
@@ -9,8 +11,8 @@ module Havox
         Havox.configuration
       end
 
-      def route_command(vm_name, protocol)
-        "sudo lxc-attach -n #{vm_name} -- /usr/bin/vtysh -c 'show ip route #{protocol}'"
+      def cmd
+        Havox::Command
       end
 
       def ssh_connection
@@ -24,22 +26,38 @@ module Havox
       end
     end
 
-    def self.fetch(vm_name, protocol = configuration.protocol)
+    def self.fetch(vm_name, protocol = :bgp)
       ssh_connection do |ssh|
-        output = ssh.exec!(route_command(vm_name, protocol))
+        output = ssh.exec!(cmd.show_ip_route(vm_name, protocol))
         parse_routes(output)
       end
     end
 
-    def self.fetch_all(protocol = configuration.protocol)
+    def self.fetch_all(protocol = :bgp)
       routes = {}
       ssh_connection do |ssh|
-        configuration.rf_vm_names.each do |vm_name|
-          output = ssh.exec!(route_command(vm_name, protocol))
+        configuration.rf_lxc_names.each do |vm_name|
+          output = ssh.exec!(cmd.show_ip_route(vm_name, protocol))
           routes[vm_name] = parse_routes(output)
         end
       end
       routes
+    end
+
+    def self.toggle_services(activate = true)
+      ssh_connection do |ssh|
+        configuration.rf_lxc_names.each do |vm_name|
+          puts "Inside #{vm_name}..."
+          ssh.exec!(cmd.backup(vm_name, '/etc/quagga/daemons'))
+          configuration.protocol_daemons.each do |daemon|
+            ssh.exec!(cmd.toggle_daemon(vm_name, daemon, activate))
+            ssh.exec!(cmd.copy_conf_files(vm_name, daemon))
+          end
+          ssh.exec!(cmd.chown(vm_name, 'quagga', 'quaggavty', '/etc/quagga/*.conf'))
+          ssh.exec!(cmd.chmod(vm_name, '640', '/etc/quagga/*.conf'))
+          puts ssh.exec!(cmd.toggle_service(vm_name, '/etc/init.d/quagga', 'restart'))
+        end
+      end
     end
   end
 end

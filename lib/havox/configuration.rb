@@ -1,13 +1,14 @@
 module Havox
   class Configuration
-    attr_accessor :protocol, :rf_host, :rf_user, :rf_password, :rf_vm_names
+    attr_accessor :rf_host, :rf_user, :rf_password, :rf_lxc_names,
+      :protocol_daemons
 
     def initialize
-      @protocol    = ''
-      @rf_host     = '192.168.1.106'
-      @rf_user     = 'routeflow'
-      @rf_password = 'routeflow'
-      @rf_vm_names = %w(rfvmA rfvmB rfvmC rfvmD)
+      @rf_host          = '192.168.1.106'
+      @rf_user          = 'routeflow'
+      @rf_password      = 'routeflow'
+      @rf_lxc_names     = %w(rfvmA rfvmB rfvmC rfvmD)
+      @protocol_daemons = [:bgpd]
     end
   end
 end
