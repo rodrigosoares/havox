@@ -52,10 +52,10 @@ module Havox
           configuration.protocol_daemons.each do |daemon|
             ssh.exec!(cmd.toggle_daemon(vm_name, daemon, activate))
             ssh.exec!(cmd.copy_conf_files(vm_name, daemon))
+            ssh.exec!(cmd.chown(vm_name, 'quagga', 'quaggavty', "/etc/quagga/#{daemon}.conf"))
+            ssh.exec!(cmd.chmod(vm_name, '640', "/etc/quagga/#{daemon}.conf"))
           end
-          ssh.exec!(cmd.chown(vm_name, 'quagga', 'quaggavty', '/etc/quagga/*.conf'))
-          ssh.exec!(cmd.chmod(vm_name, '640', '/etc/quagga/*.conf'))
-          puts ssh.exec!(cmd.toggle_service(vm_name, '/etc/init.d/quagga', 'restart'))
+          ssh.exec!(cmd.toggle_service(vm_name, '/etc/init.d/quagga', 'restart'))
         end
       end
     end
