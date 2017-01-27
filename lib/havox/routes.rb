@@ -47,7 +47,6 @@ module Havox
     def self.toggle_services(activate = true)
       ssh_connection do |ssh|
         configuration.rf_lxc_names.each do |vm_name|
-          puts "Inside #{vm_name}..."
           ssh.exec!(cmd.backup(vm_name, '/etc/quagga/daemons'))
           configuration.protocol_daemons.each do |daemon|
             ssh.exec!(cmd.toggle_daemon(vm_name, daemon, activate))
