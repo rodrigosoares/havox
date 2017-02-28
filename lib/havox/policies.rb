@@ -5,6 +5,9 @@ module Havox
     class << self
       private
 
+      SEPARATOR_REGEX   = /On\sswitch\s\d+/
+      RULES_BLOCK_REGEX = /(?<=OpenFlow\srules\s)\(\d+\):#{SEPARATOR_REGEX}(.+)(?=Queue\sConfigurations)/
+
       def config
         Havox.configuration
       end
@@ -18,16 +21,23 @@ module Havox
           yield(ssh)
         end
       end
+
+      def parse_rules(result)
+        result = result.tr("\n\t", '')                                          # Removes line break and tab characters.
+        result = result.scan(RULES_BLOCK_REGEX).flatten.first                   # Matches OpenFlow rules block.
+        result.split(SEPARATOR_REGEX)                                           # Splits the block into separated rules.
+      end
     end
 
     def self.run(command)
-      ssh_connection { |ssh| puts ssh.exec!(command) }
+      output = nil
+      ssh_connection { |ssh| output = ssh.exec!(command) }
+      output
     end
 
     def self.compile(topology_file, policy_file, verbose = true)
-      ssh_connection do |ssh|
-        puts ssh.exec!(cmd.compile(topology_file, policy_file, verbose))
-      end
+      result = run(cmd.compile(topology_file, policy_file, verbose))
+      parse_rules(result)
     end
   end
 end
