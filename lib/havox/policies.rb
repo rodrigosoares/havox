@@ -25,7 +25,8 @@ module Havox
       def parse(result)
         result = result.tr("\n\t", '')                                          # Removes line break and tab characters.
         result = result.scan(RULES_BLOCK_REGEX).flatten.first                   # Matches OpenFlow rules block.
-        result.split(SEPARATOR_REGEX)                                           # Splits the block into separated rules.
+        result = result.split(SEPARATOR_REGEX)                                  # Splits the block into separated rules.
+        result.map(&:to_s)                                                      # Converts NetSSH special string to string.
       end
     end
 
@@ -36,8 +37,11 @@ module Havox
     end
 
     def self.compile(topology_file, policy_file, verbose = true)
-      result = run(cmd.compile(topology_file, policy_file, verbose))
-      parse(result)
+      rules = []
+      result = run(cmd.compile(topology_file, policy_file, verbose))            # Runs Merlin in the remote VM and retrieves its output.
+      result = parse(result)                                                    # Parses the output into raw rules.
+      result.each { |raw_rule| rules << Havox::Rule.new(raw_rule) }             # Creates Rule instances for each raw rule.
+      rules
     end
   end
 end
