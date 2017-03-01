@@ -25,7 +25,7 @@ module Havox
       raw_matches = raw_matches.map { |str| str.tr('()*', '').strip }           # Removes unwanted characters.
       raw_matches = raw_matches.reject(&:empty?)                                # Rejects resulting empty match fields.
       raw_matches.each do |raw_match|
-        stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='
+        stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='.
         ok_matches[DIC[stmt.first].to_sym] = stmt.last                          # Adds a treated entry based on the dictionary.
       end
       ok_matches
