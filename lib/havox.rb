@@ -3,6 +3,7 @@ require 'havox/configuration'
 require 'havox/command'
 require 'havox/routes'
 require 'havox/policies'
+require 'havox/rule'
 require 'net/ssh'
 
 module Havox
