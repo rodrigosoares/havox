@@ -22,7 +22,7 @@ module Havox
         end
       end
 
-      def parse_rules(result)
+      def parse(result)
         result = result.tr("\n\t", '')                                          # Removes line break and tab characters.
         result = result.scan(RULES_BLOCK_REGEX).flatten.first                   # Matches OpenFlow rules block.
         result.split(SEPARATOR_REGEX)                                           # Splits the block into separated rules.
@@ -37,7 +37,7 @@ module Havox
 
     def self.compile(topology_file, policy_file, verbose = true)
       result = run(cmd.compile(topology_file, policy_file, verbose))
-      parse_rules(result)
+      parse(result)
     end
   end
 end

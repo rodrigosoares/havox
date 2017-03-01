@@ -21,7 +21,7 @@ module Havox
         end
       end
 
-      def parse_routes(table_str)
+      def parse(table_str)
         table_str.scan(ENTRY_REGEX).flatten
       end
     end
@@ -29,7 +29,7 @@ module Havox
     def self.fetch(vm_name, protocol = :bgp)
       ssh_connection do |ssh|
         output = ssh.exec!(cmd.show_ip_route(vm_name, protocol))
-        parse_routes(output)
+        parse(output)
       end
     end
 
@@ -38,7 +38,7 @@ module Havox
       ssh_connection do |ssh|
         config.rf_lxc_names.each do |vm_name|
           output = ssh.exec!(cmd.show_ip_route(vm_name, protocol))
-          routes[vm_name] = parse_routes(output)
+          routes[vm_name] = parse(output)
         end
       end
       routes
