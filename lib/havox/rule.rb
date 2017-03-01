@@ -1,6 +1,6 @@
 module Havox
   class Rule
-    attr_reader :matches, :action, :raw
+    attr_reader :matches, :action, :dp_id, :raw
 
     DIC = {
       'switch' => 'dp_id',
@@ -14,6 +14,7 @@ module Havox
     def initialize(raw)
       @matches = parsed_matches(raw)
       @action = parsed_action(raw)
+      @dp_id = @matches[:dp_id]
       @raw = raw
     end
 
