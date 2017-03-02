@@ -7,7 +7,7 @@ module Havox
                          'LD_LIBRARY_PATH="${GUROBI_HOME}/lib"'
 
       def show_ip_route(vm_name, protocol)
-        rf_command(vm_name, "/usr/bin/vtysh -c 'show ip route #{protocol.to_s}'")
+        rf_command(vm_name, "/usr/bin/vtysh -c 'show ip route #{protocol}'")
       end
 
       def toggle_daemon(vm_name, daemon, activate = true)
