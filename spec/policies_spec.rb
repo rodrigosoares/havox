@@ -5,9 +5,12 @@ RSpec.configure { |c| c.include PoliciesHelper }
 
 describe Havox::Policies do
   describe '.run' do
+    let(:ssh_connection) { double('connection') }
+
     it 'outputs user-issued command results' do
-      pending 'Write this test'
-      expect(true).to be false
+      allow(Net::SSH).to receive(:start).and_yield(ssh_connection)
+      allow(ssh_connection).to receive(:exec!).and_return('result')
+      expect(subject.run('command')).to eq('result')
     end
   end
 
