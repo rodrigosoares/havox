@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 1.13'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'factory_girl', '~> 4.8.0'
   spec.add_runtime_dependency     'net-ssh', '~> 4.0.0'
   spec.add_runtime_dependency     'awesome_print', '~> 1.7.0'
 end
