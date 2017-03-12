@@ -1,7 +1,6 @@
 module Havox
   module Command
     class << self
-      MERLIN_DIRECTORY = '/home/frenetic/merlin'
       ENVIRONMENT_VARS = 'GUROBI_HOME="/opt/gurobi701/linux64" ' \
                          'PATH="${PATH}:${GUROBI_HOME}/bin" ' \
                          'LD_LIBRARY_PATH="${GUROBI_HOME}/lib"'
@@ -47,7 +46,7 @@ module Havox
       end
 
       def merlin_command(args)
-        "#{ENVIRONMENT_VARS} #{MERLIN_DIRECTORY}/Merlin.native #{args}"
+        "#{ENVIRONMENT_VARS} #{Havox.configuration.merlin_path}/Merlin.native #{args}"
       end
     end
   end

@@ -1,7 +1,7 @@
 module Havox
   class Configuration
     attr_accessor :rf_host, :rf_user, :rf_password, :rf_lxc_names, :merlin_host,
-      :merlin_user, :merlin_password, :protocol_daemons
+      :merlin_user, :merlin_password, :merlin_path, :protocol_daemons
 
     def initialize
       @rf_host          = '10.0.30.191'
@@ -11,6 +11,7 @@ module Havox
       @merlin_host      = '192.168.56.101'
       @merlin_user      = 'frenetic'
       @merlin_password  = 'frenetic'
+      @merlin_path      = '/home/frenetic/merlin'
       @protocol_daemons = [:bgpd]
     end
   end
