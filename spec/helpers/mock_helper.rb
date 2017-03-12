@@ -1,4 +1,4 @@
-module PoliciesHelper
+module MockHelper
   def merlin_response
     "\nMax map:\nMin map:\nv1 -> 11111111\n\nGraph construction time:\t858010" \
     "\nObjective construction time:\t120355\nConst construction time:\t258465" \
@@ -10,5 +10,10 @@ module PoliciesHelper
     " and *))))\nand vlanId = 10000) -> Enqueue(1,1)\n\nQueue Configurations " \
     "(1):\n\nOn switch 1:\n\tOn port 1:\n\t\t1 -> 11111111 111111111111111111" \
     "7\n\n\ntc Configurations (0):\n\n\n\ntc Clicks (0):\n\n\n"
+  end
+
+  def raw_rule
+    '(((switch = 1 and (* and (ethTyp = 2048 and ipDst = 167772162) and ' \
+    'ipSrc = 167772161) and port = 80)) and vlanId = 65535) -> Output(0)'
   end
 end

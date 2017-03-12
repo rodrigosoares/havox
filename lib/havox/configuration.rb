@@ -8,7 +8,7 @@ module Havox
       @rf_user          = 'routeflow'
       @rf_password      = 'routeflow'
       @rf_lxc_names     = %w(rfvmA rfvmB rfvmC rfvmD)
-      @merlin_host      = '192.168.1.107'
+      @merlin_host      = '192.168.56.101'
       @merlin_user      = 'frenetic'
       @merlin_password  = 'frenetic'
       @protocol_daemons = [:bgpd]

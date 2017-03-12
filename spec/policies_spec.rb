@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'helpers/policies_helper'
+require 'helpers/mock_helper'
 
-RSpec.configure { |c| c.include PoliciesHelper }
+RSpec.configure { |c| c.include MockHelper }
 
 describe Havox::Policies do
   describe '.run' do

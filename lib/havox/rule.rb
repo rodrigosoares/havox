@@ -29,11 +29,28 @@ module Havox
         stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='.
         ok_matches[DIC[stmt.first].to_sym] = stmt.last                          # Adds a treated entry based on the dictionary.
       end
-      ok_matches
+      treated(ok_matches)
     end
 
     def parsed_action(raw_rule)
       raw_rule.split('->').last.strip                                           # Parses the action in the 2nd part.
+    end
+
+    def treated(hash)
+      hash[:ipv4_src] = parsed_ipv4(hash[:ipv4_src]) unless hash[:ipv4_src].nil?
+      hash[:ipv4_dst] = parsed_ipv4(hash[:ipv4_dst]) unless hash[:ipv4_dst].nil?
+      hash[:eth_type] = parsed_type(hash[:eth_type]) unless hash[:eth_type].nil?
+      hash
+    end
+
+    def parsed_ipv4(ip_integer)
+      bits = ip_integer.to_i.to_s(2).rjust(32, '0')                             # Transforms the string number into a 32-bit sequence.
+      octets = bits.scan(/\d{8}/).map { |octet_bits| octet_bits.to_i(2) }       # Splits the sequence into decimal octets.
+      octets.join('.')                                                          # Returns the joined octets.
+    end
+
+    def parsed_type(ether_type)
+      "0x#{ether_type.to_i.to_s(16).rjust(4, '0')}"
     end
   end
 end
