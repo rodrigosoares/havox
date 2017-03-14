@@ -5,6 +5,7 @@ require 'havox/routes'
 require 'havox/policies'
 require 'havox/rule'
 require 'net/ssh'
+require 'net/scp'
 
 module Havox
   class << self

@@ -36,6 +36,12 @@ module Havox
       output
     end
 
+    def self.upload!(file, dst = nil)
+      dst ||= "#{config.merlin_path}/examples/"
+      ssh_connection { |ssh| ssh.scp.upload!(file, dst) }
+      true
+    end
+
     def self.compile(topology_file, policy_file, verbose = true)
       rules = []
       result = run(cmd.compile(topology_file, policy_file, verbose))            # Runs Merlin in the remote VM and retrieves its output.

@@ -4,9 +4,9 @@ require 'helpers/mock_helper'
 RSpec.configure { |c| c.include MockHelper }
 
 describe Havox::Policies do
-  describe '.run' do
-    let(:ssh_connection) { double('connection') }
+  let(:ssh_connection) { double('connection') }
 
+  describe '.run' do
     it 'outputs user-issued command results' do
       allow(Net::SSH).to receive(:start).and_yield(ssh_connection)
       allow(ssh_connection).to receive(:exec!).and_return('result')
@@ -23,6 +23,27 @@ describe Havox::Policies do
       expect(rules.map(&:dp_id)).to include(rule.dp_id)
       expect(rules.map(&:matches)).to include(rule.matches)
       expect(rules.map(&:action)).to include(rule.action)
+    end
+  end
+
+  describe '.upload!' do
+    before(:each) do
+      allow(Net::SSH).to receive(:start).and_yield(ssh_connection)
+      allow(ssh_connection).to receive(:scp).and_return(double)
+    end
+
+    it 'uploads a file to a Merlin subfolder' do
+      allow(ssh_connection.scp).to receive(:upload!).with('/foo.dot',
+        "#{Havox.configuration.merlin_path}/examples/"
+      )
+      expect(subject.upload!('/foo.dot')).to be true
+    end
+
+    it 'uploads a file to an arbitrary path' do
+      allow(ssh_connection.scp).to receive(:upload!).with('/foo.dot',
+        '/destination/path/'
+      )
+      expect(subject.upload!('/foo.dot', '/destination/path/')).to be true
     end
   end
 end
