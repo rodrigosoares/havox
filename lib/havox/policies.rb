@@ -42,9 +42,9 @@ module Havox
       true
     end
 
-    def self.compile(topology_file, policy_file, verbose = true)
+    def self.compile(topology_file, policy_file)
       rules = []
-      result = run(cmd.compile(topology_file, policy_file, verbose))            # Runs Merlin in the remote VM and retrieves its output.
+      result = run(cmd.compile(topology_file, policy_file))                     # Runs Merlin in the remote VM and retrieves its output.
       result = parse(result)                                                    # Parses the output into raw rules.
       result.each { |raw_rule| rules << Havox::Rule.new(raw_rule) }             # Creates Rule instances for each raw rule.
       rules

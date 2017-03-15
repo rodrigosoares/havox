@@ -35,8 +35,8 @@ module Havox
         rf_command(vm_name, "/bin/chmod #{permissions} #{path}")
       end
 
-      def compile(topology_file, policy_file, verbose = true)
-        merlin_command("-topo #{topology_file} #{policy_file} #{'-verbose' if verbose}")
+      def compile(topology_file, policy_file)
+        merlin_command("-topo #{topology_file} #{policy_file} -verbose")
       end
 
       private
