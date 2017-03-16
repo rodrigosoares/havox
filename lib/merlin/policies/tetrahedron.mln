@@ -1,0 +1,4 @@
+proxy := { h1 };
+
+foreach (s, d) : cross(h1, h2, h3, h4)
+* -> ( .* proxy .* ) at min(50 Mbps);
