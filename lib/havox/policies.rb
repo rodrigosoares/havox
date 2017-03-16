@@ -5,6 +5,7 @@ module Havox
     class << self
       private
 
+      BASENAME_REGEX    = /^.+\/(?<name>[^\/]+)$/
       SEPARATOR_REGEX   = /On\sswitch\s\d+/
       RULES_BLOCK_REGEX = /(?<=OpenFlow\srules\s)\(\d+\):#{SEPARATOR_REGEX}(.+)(?=Queue\sConfigurations)/
 
@@ -28,6 +29,10 @@ module Havox
         result = result.split(SEPARATOR_REGEX)                                  # Splits the block into separated rules.
         result.map(&:to_s)                                                      # Converts NetSSH special string to string.
       end
+
+      def basename(path)
+        path.match(BASENAME_REGEX)[:name]
+      end
     end
 
     def self.run(command)
@@ -48,6 +53,15 @@ module Havox
       result = parse(result)                                                    # Parses the output into raw rules.
       result.each { |raw_rule| rules << Havox::Rule.new(raw_rule) }             # Creates Rule instances for each raw rule.
       rules
+    end
+
+    def self.compile!(topology_file, policy_file, dst = nil)
+      dst ||= "#{config.merlin_path}/examples/"
+      if upload!(topology_file, dst) && upload!(policy_file, dst)
+        topology_file = "#{dst}#{basename(topology_file)}"
+        policy_file = "#{dst}#{basename(policy_file)}"
+        compile(topology_file, policy_file)
+      end
     end
   end
 end
