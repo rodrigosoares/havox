@@ -64,11 +64,13 @@ describe Havox::Command do
   end
 
   describe '.compile' do
+    let(:config) { Havox.configuration }
+
     it 'builds a Merlin policy compilation command' do
       returned_cmd = subject.compile('/path/to/topo', '/path/to/policy')
-      expected_cmd = 'GUROBI_HOME="/opt/gurobi701/linux64" PATH="${PATH}:${GUROBI_HOME}/bin" ' \
-                     'LD_LIBRARY_PATH="${GUROBI_HOME}/lib" /home/frenetic/merlin/Merlin.native ' \
-                     '-topo /path/to/topo /path/to/policy -verbose'
+      expected_cmd = "GUROBI_HOME=\"#{config.gurobi_path}\" PATH=\"${PATH}:${GUROBI_HOME}/bin\" " \
+                     'LD_LIBRARY_PATH="${GUROBI_HOME}/lib" GRB_LICENSE_FILE="${GUROBI_HOME}/gurobi.lic" ' \
+                     "#{config.merlin_path}/Merlin.native -topo /path/to/topo /path/to/policy -verbose"
       expect(returned_cmd).to eq(expected_cmd)
     end
   end

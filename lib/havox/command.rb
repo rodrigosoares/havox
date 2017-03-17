@@ -1,10 +1,6 @@
 module Havox
   module Command
     class << self
-      ENVIRONMENT_VARS = 'GUROBI_HOME="/opt/gurobi701/linux64" ' \
-                         'PATH="${PATH}:${GUROBI_HOME}/bin" ' \
-                         'LD_LIBRARY_PATH="${GUROBI_HOME}/lib"'
-
       def show_ip_route(vm_name, protocol)
         rf_command(vm_name, "/usr/bin/vtysh -c 'show ip route #{protocol}'")
       end
@@ -46,7 +42,11 @@ module Havox
       end
 
       def merlin_command(args)
-        "#{ENVIRONMENT_VARS} #{Havox.configuration.merlin_path}/Merlin.native #{args}"
+        env_vars = "GUROBI_HOME=\"#{Havox.configuration.gurobi_path}\" " \
+                   'PATH="${PATH}:${GUROBI_HOME}/bin" ' \
+                   'LD_LIBRARY_PATH="${GUROBI_HOME}/lib" ' \
+                   'GRB_LICENSE_FILE="${GUROBI_HOME}/gurobi.lic"'
+        "#{env_vars} #{Havox.configuration.merlin_path}/Merlin.native #{args}"
       end
     end
   end
