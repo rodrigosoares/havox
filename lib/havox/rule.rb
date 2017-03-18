@@ -18,6 +18,15 @@ module Havox
       @raw = raw
     end
 
+    def to_s
+      matches_str = @matches.map { |k, v| "#{k.to_s} = #{v.to_s}" }.join(' AND ')
+      "#{matches_str} --> #{@action}"
+    end
+
+    def inspect
+      "Rule #{object_id.to_s(16)}: #{to_s}"
+    end
+
     private
 
     def parsed_matches(raw_rule)
