@@ -3,12 +3,19 @@ module Havox
     attr_reader :matches, :action, :dp_id, :raw
 
     DIC = {
-      'switch' => 'dp_id',
-      'ethTyp' => 'eth_type',
-      'port'   => 'in_port',
-      'ipSrc'  => 'ipv4_src',
-      'ipDst'  => 'ipv4_dst',
-      'vlanId' => 'vlan_vid'
+      'ethSrc'     => 'eth_src',
+      'ethDst'     => 'eth_dst',
+      'ethTyp'     => 'eth_type',                                               # https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml
+      'ipSrc'      => 'ipv4_src',
+      'ipDst'      => 'ipv4_dst',
+      'ipProto'    => 'ip_proto',                                               # http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+      'nwProto'    => 'ip_proto',
+      'port'       => 'in_port',
+      'switch'     => 'dp_id',
+      'tcpSrcPort' => 'tcp_src',
+      'tcpDstPort' => 'tcp_dst',
+      'vlanId'     => 'vlan_vid',
+      'vlanPcp'    => 'vlan_pcp'
     }
 
     def initialize(raw)

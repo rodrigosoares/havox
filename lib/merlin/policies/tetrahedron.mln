@@ -1,2 +1,5 @@
-foreach (s,d) : cross({h1}, {h4})
-  * -> .* s1 s3 .* at min(100 Mbps);
+srcs := { h1; h2 };
+dsts := { h4 };
+
+foreach (s, d): cross(srcs, dsts)
+  ipProto = 6 and tcpDstPort = 80 -> .* s2 s3 .* at min(100 Mbps);
