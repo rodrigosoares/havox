@@ -5,6 +5,7 @@ module Havox
     class << self
       private
 
+      ERROR_REGEX       = /Uncaught\sexception:\s*(.+)Raised/
       BASENAME_REGEX    = /^.+\/(?<name>[^\/]+)$/
       SEPARATOR_REGEX   = /On\sswitch\s\d+/
       RULES_BLOCK_REGEX = /(?<=OpenFlow\srules\s)\(\d+\):#{SEPARATOR_REGEX}(.+)(?=Queue\sConfigurations)/
@@ -25,9 +26,16 @@ module Havox
 
       def parse(result)
         result = result.tr("\n\t", '')                                          # Removes line break and tab characters.
+        check_for_errors(result)                                                # Raises an error if Merlin has errored.
         result = result.scan(RULES_BLOCK_REGEX).flatten.first                   # Matches OpenFlow rules block.
+        return [] if result.nil?                                                # Returns an empty array if no rules were created.
         result = result.split(SEPARATOR_REGEX)                                  # Splits the block into separated rules.
         result.map(&:to_s)                                                      # Converts NetSSH special string to string.
+      end
+
+      def check_for_errors(result)
+        error_msg = result.scan(ERROR_REGEX).flatten.first
+        raise Havox::MerlinError, error_msg unless error_msg.nil?
       end
 
       def basename(path)

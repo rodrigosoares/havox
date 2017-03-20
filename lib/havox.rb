@@ -1,4 +1,5 @@
 require 'havox/version'
+require 'havox/exceptions'
 require 'havox/configuration'
 require 'havox/command'
 require 'havox/routes'

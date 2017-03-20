@@ -24,6 +24,17 @@ describe Havox::Policies do
       expect(rules.map(&:matches)).to include(rule.matches)
       expect(rules.map(&:action)).to include(rule.action)
     end
+
+    it 'returns an empty set if Merlin generates no rules' do
+      allow(subject).to receive(:run).and_return(merlin_response(true))
+      rules = subject.compile('/foo.dot', 'foo.mln')
+      expect(rules).to be_empty
+    end
+
+    it 'raises an error if Merlin encounters an exception' do
+      allow(subject).to receive(:run).and_return(merlin_error_response)
+      expect { subject.compile('/foo.dot', 'foo.mln') }.to raise_error(Havox::MerlinError)
+    end
   end
 
   describe '.compile!' do
