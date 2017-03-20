@@ -16,7 +16,7 @@ describe Havox::Rule do
       expect(new_rule.matches[:ipv4_src]).to eq('10.0.0.1')
       expect(new_rule.matches[:ipv4_dst]).to eq('10.0.0.2')
       expect(new_rule.matches[:vlan_vid]).to eq('65535')
-      expect(new_rule.action).to eq('Output(0)')
+      expect(new_rule.actions).to match_array(['ActionA(0)', 'ActionB(0)'])
     end
   end
 

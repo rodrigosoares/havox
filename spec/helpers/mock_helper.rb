@@ -21,7 +21,8 @@ module MockHelper
 
   def raw_rule
     '(((switch = 1 and (* and (ethTyp = 2048 and ipDst = 167772162) and ' \
-    'ipSrc = 167772161) and port = 80)) and vlanId = 65535) -> Output(0)'
+    'ipSrc = 167772161) and port = 80)) and vlanId = 65535) -> ActionA(0) ' \
+    'ActionB(0)'
   end
 
   private
@@ -29,7 +30,8 @@ module MockHelper
   def openflow_rules(empty)
     unless empty
       "\n\nOn switch 1\t(((switch = 1\n  and (port = 0 and (((ipSrc = 1000000" \
-      "01 and ipDst = 100000002)) and *))))\nand vlanId = 10000) -> Enqueue(1,1)"
+      "01 and ipDst = 100000002)) and *))))\nand vlanId = 10000) -> SetField(" \
+      "vlan, 1)\tEnqueue(1,1)"
     end
   end
 end

@@ -1,6 +1,6 @@
 module Havox
   class Rule
-    attr_reader :matches, :action, :dp_id, :raw
+    attr_reader :matches, :actions, :dp_id, :raw
 
     DIC = {
       'ethSrc'     => 'eth_src',
@@ -20,14 +20,15 @@ module Havox
 
     def initialize(raw)
       @matches = parsed_matches(raw)
-      @action = parsed_action(raw)
+      @actions = parsed_actions(raw)
       @dp_id = @matches[:dp_id]
-      @raw = raw
+      @raw = raw.strip
     end
 
     def to_s
-      matches_str = @matches.map { |k, v| "#{k.to_s} = #{v.to_s}" }.join(' AND ')
-      "#{matches_str} --> #{@action}"
+      sep = ' AND '
+      matches_str = @matches.map { |k, v| "#{k.to_s} = #{v.to_s}" }.join(sep)
+      "#{matches_str} --> #{@actions.join(sep)}"
     end
 
     def inspect
@@ -48,8 +49,9 @@ module Havox
       treated(ok_matches)
     end
 
-    def parsed_action(raw_rule)
-      raw_rule.split('->').last.strip                                           # Parses the action in the 2nd part.
+    def parsed_actions(raw_rule)
+      raw_actions = raw_rule.split('->').last.strip                             # Parses the actions in the 2nd part.
+      raw_actions.split(/(?<=\))\s+(?=\w)/)                                     # Splits the string into single actions.
     end
 
     def treated(hash)

@@ -25,7 +25,7 @@ module Havox
       end
 
       def parse(result)
-        result = result.tr("\n\t", '')                                          # Removes line break and tab characters.
+        result = result.tr("\n", '').tr("\t", ' ')                              # Removes line break and tab characters.
         check_for_errors(result)                                                # Raises an error if Merlin has errored.
         result = result.scan(RULES_BLOCK_REGEX).flatten.first                   # Matches OpenFlow rules block.
         return [] if result.nil?                                                # Returns an empty array if no rules were created.

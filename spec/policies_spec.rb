@@ -22,7 +22,7 @@ describe Havox::Policies do
       rules = subject.compile('/foo.dot', 'foo.mln')
       expect(rules.map(&:dp_id)).to include(rule.dp_id)
       expect(rules.map(&:matches)).to include(rule.matches)
-      expect(rules.map(&:action)).to include(rule.action)
+      expect(rules.map(&:actions)).to include(rule.actions)
     end
 
     it 'returns an empty set if Merlin generates no rules' do
