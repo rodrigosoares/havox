@@ -1,0 +1,15 @@
+require 'optparse'
+require 'ostruct'
+
+args = OpenStruct.new
+OptionParser.new do |opt|
+  opt.on('-cCONF', '--trema-topo=CONF', 'Trema topology configuration file') { |o| args.trema_topology = o }
+  opt.on('-tTOPO', '--merlin-topo=TOPO', 'Merlin topology file') { |o| args.merlin_topology = o }
+  opt.on('-pPOLICY', '--merlin-policy=POLICY', 'Merlin policy file') { |o| args.merlin_policy = o }
+end.parse!
+
+unless args.trema_topology.nil?
+  cmd = 'trema run lib/trema/controllers/main_controller.rb' \
+        " -c #{args.trema_topology}"
+  system(cmd)
+end
