@@ -9,6 +9,8 @@ OptionParser.new do |opt|
 end.parse!
 
 unless args.trema_topology.nil?
+  ENV['MERLIN_TOPOLOGY'] = args.merlin_topology
+  ENV['MERLIN_POLICY'] = args.merlin_policy
   cmd = 'trema run lib/trema/controllers/main_controller.rb' \
         " -c #{args.trema_topology}"
   system(cmd)
