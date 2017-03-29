@@ -3,7 +3,6 @@ require 'colorize'
 
 class MainController < Trema::Controller
   def start(_argv)
-    logger.info "Havox service is #{'ACTIVE'.bold}."
     logger.info "Generating rules based on the policies defined in #{ENV['MERLIN_POLICY'].bold}" \
                 " over the topology #{ENV['MERLIN_TOPOLOGY'].bold}..."
     @rules = Havox::Policies.compile!(ENV['MERLIN_TOPOLOGY'], ENV['MERLIN_POLICY'])
