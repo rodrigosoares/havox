@@ -1,6 +1,7 @@
 require 'optparse'
 require 'ostruct'
 
+# Defines command options and parameters.
 args = OpenStruct.new
 OptionParser.new do |opt|
   opt.on('-cCONF', '--trema-topo=CONF', 'Trema topology configuration file') { |o| args.trema_topology = o }
@@ -8,11 +9,24 @@ OptionParser.new do |opt|
   opt.on('-pPOLICY', '--merlin-policy=POLICY', 'Merlin policy file') { |o| args.merlin_policy = o }
 end.parse!
 
-unless args.trema_topology.nil?
-  puts 'Loading Havox service...'
+# Sets all required environment variables to be read in the controller.
+def set_environment_vars(args)
   ENV['MERLIN_TOPOLOGY'] = args.merlin_topology
   ENV['MERLIN_POLICY'] = args.merlin_policy
+end
+
+# Defines the main execution method.
+def start!(args)
+  puts 'Loading Havox service...'
   cmd = 'trema run lib/trema/controllers/main_controller.rb' \
-        " -c #{args.trema_topology}"
+  " -c #{args.trema_topology}"
   system(cmd)
+rescue Interrupt
+  puts 'Closing.'
+end
+
+# After everything is defined, main execution flux starts here.
+unless args.trema_topology.nil?
+  set_environment_vars(args)
+  start!(args)
 end
