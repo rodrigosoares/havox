@@ -9,7 +9,7 @@ describe Havox::Rule do
   describe '.new' do
     it 'parses a Merlin formatted OpenFlow rule' do
       new_rule = Havox::Rule.new(raw_rule)
-      expect(new_rule.dp_id).to eq('1')
+      expect(new_rule.dp_id).to eq(1)
       expect(new_rule.matches[:dp_id]).to eq('1')
       expect(new_rule.matches[:in_port]).to eq('80')
       expect(new_rule.matches[:eth_type]).to eq('0x0800')

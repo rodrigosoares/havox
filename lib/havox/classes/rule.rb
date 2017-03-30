@@ -21,7 +21,7 @@ module Havox
     def initialize(raw)
       @matches = parsed_matches(raw)
       @actions = parsed_actions(raw)
-      @dp_id = @matches[:dp_id]
+      @dp_id = @matches[:dp_id].to_i
       @raw = raw.strip
     end
 
