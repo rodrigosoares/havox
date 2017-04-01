@@ -18,6 +18,7 @@ class MainController < Trema::Controller
     @datapaths_off -= [dp_id]
     dp_name = "s#{dp_id}"
     logger.info "Datapath #{dp_name.bold} is #{'ONLINE'.bold.green}."
+    install_rules(dp_id)
   end
 
   def switch_disconnected(dp_id)
@@ -33,5 +34,10 @@ class MainController < Trema::Controller
     datapaths_on  = @datapaths.map { |id| "s#{id}" }.join(' ').bold.green
     datapaths_off = @datapaths_off.map { |id| "s#{id}" }.join(' ').bold.red
     logger.info "Datapath statuses: [#{datapaths_on}] [#{datapaths_off}]"
+  end
+
+  def install_rules(dp_id)
+    dp_rules = @rules.select { |r| r.dp_id == dp_id }
+    # code
   end
 end

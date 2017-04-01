@@ -20,8 +20,8 @@ module MockHelper
   end
 
   def raw_rule
-    '(((switch = 1 and (* and (ethTyp = 2048 and ipDst = 167772162) and ' \
-    'ipSrc = 167772161) and port = 80)) and vlanId = 65535) -> ActionA(0) ' \
+    '(((switch = 1 and (* and (ethTyp = 2048 and ipDst = 167772162) and '      \
+    'ipSrc = 167772161) and port = 80)) and vlanId = 65535) -> ActionA(0, 2) ' \
     'ActionB(0)'
   end
 

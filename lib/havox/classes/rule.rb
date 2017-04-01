@@ -28,7 +28,10 @@ module Havox
     def to_s
       sep = ' AND '
       matches_str = @matches.map { |k, v| "#{k.to_s} = #{v.to_s}" }.join(sep)
-      "#{matches_str} --> #{@actions.join(sep)}"
+      actions_str = @actions.map do |o|
+        %Q(#{o[:action]}(#{o[:arg_a]}#{", #{o[:arg_b]}" unless o[:arg_b].empty?}))
+      end
+      "#{matches_str} --> #{actions_str.join(sep)}"
     end
 
     def inspect
@@ -50,8 +53,18 @@ module Havox
     end
 
     def parsed_actions(raw_rule)
+      actions_ok = []
       raw_actions = raw_rule.split('->').last.strip                             # Parses the actions in the 2nd part.
-      raw_actions.split(/(?<=\))\s+(?=\w)/)                                     # Splits the string into single actions.
+      raw_actions = raw_actions.split(/(?<=\))\s+(?=\w)/)                       # Splits the string into single raw actions.
+      raw_actions.each do |raw_action|
+        regex = /(?<action>\w+)\((?<arg_a>[\w<>]+)[,\s]*(?<arg_b>[\w<>]*)\)/
+        actions_ok << hashed(raw_action.match(regex))
+      end
+      actions_ok
+    end
+
+    def hashed(match_data)
+      Hash[match_data.names.map(&:to_sym).zip(match_data.captures)]
     end
 
     def treated(hash)
