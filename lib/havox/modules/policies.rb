@@ -1,7 +1,5 @@
 module Havox
   module Policies
-    include Havox::Command
-
     class << self
       private
 

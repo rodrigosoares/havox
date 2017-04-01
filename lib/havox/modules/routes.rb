@@ -1,7 +1,5 @@
 module Havox
   module Routes
-    include Havox::Command
-
     class << self
       ENTRY_REGEX = /^\w.*\s((?:[0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2}).*$/
 
