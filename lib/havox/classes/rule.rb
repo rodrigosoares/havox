@@ -25,7 +25,7 @@ module Havox
       @raw = raw.strip
     end
 
-    def to_s
+    def to_s                                                                    # Stringifies the rule.
       sep = ' AND '
       matches_str = @matches.map { |k, v| "#{k.to_s} = #{v.to_s}" }.join(sep)
       actions_str = @actions.map do |o|
@@ -35,7 +35,7 @@ module Havox
     end
 
     def inspect
-      "Rule #{object_id.to_s(16)}: #{to_s}"
+      "Rule #{object_id.to_s(16)}: #{to_s}"                                     # Prints the rule when debugging or array listing.
     end
 
     private
@@ -57,14 +57,14 @@ module Havox
       raw_actions = raw_rule.split('->').last.strip                             # Parses the actions in the 2nd part.
       raw_actions = raw_actions.split(/(?<=\))\s+(?=\w)/)                       # Splits the string into single raw actions.
       raw_actions.each do |raw_action|
-        regex = /(?<action>\w+)\((?<arg_a>[\w<>]+)[,\s]*(?<arg_b>[\w<>]*)\)/
-        actions_ok << hashed(raw_action.match(regex))
+        regex = /(?<action>\w+)\((?<arg_a>[\w<>]+)[,\s]*(?<arg_b>[\w<>]*)\)/    # Matches raw actions in the format 'Action(x, y)'.
+        actions_ok << hashed(raw_action.match(regex))                           # Adds the structured action to the returning array.
       end
       actions_ok
     end
 
     def hashed(match_data)
-      Hash[match_data.names.map(&:to_sym).zip(match_data.captures)]
+      Hash[match_data.names.map(&:to_sym).zip(match_data.captures)]             # Converts the match data to a hash object.
     end
 
     def treated(hash)
