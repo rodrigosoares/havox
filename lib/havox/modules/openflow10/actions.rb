@@ -30,10 +30,9 @@ module Havox
       end
 
       def self.raise_unknown_action(obj)
-        raise Havox::UnpredictedAction, "Unable to translate action"           \
-                                        " #{obj[:action]} with arguments A:"   \
-                                        " #{obj[:arg_a]} and B: #{obj[:arg_b]}"\
-                                        ", respectively"
+        raise Havox::UnpredictedAction,
+          "Unable to translate action #{obj[:action]} with arguments A:"       \
+          " #{obj[:arg_a]} and B: #{obj[:arg_b]}, respectively"
       end
     end
   end
