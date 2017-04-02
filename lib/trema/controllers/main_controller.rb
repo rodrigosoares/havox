@@ -38,7 +38,13 @@ class MainController < Trema::Controller
 
   def install_rules(dp_id)
     dp_rules = @rules.select { |r| r.dp_id == dp_id }
-    # code
+    flow_mod(dp_id, dp_rules)
+  end
+
+  def flow_mod(dp_id, dp_rules)
+    dp_rules.each do |rule|
+      send_flow_mod_add(dp_id, match: rule.matches, actions: rule.actions)
+    end
   end
 
   def datapath_rules_info

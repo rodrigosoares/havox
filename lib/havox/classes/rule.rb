@@ -8,6 +8,7 @@ module Havox
       @matches = parsed_matches(raw)
       @actions = parsed_actions(raw)
       @dp_id = @matches[:dp_id].to_i
+      @matches.delete(:dp_id)
       @raw = raw.strip
     end
 
@@ -21,7 +22,7 @@ module Havox
     end
 
     def inspect
-      "Rule #{object_id.to_s(16)}: #{to_s}"                                     # Prints the rule when debugging or array listing.
+      "Rule #{object_id.to_s(16)}, dp_id = #{@dp_id}: #{to_s}"                  # Prints the rule when debugging or array listing.
     end
 
     private
