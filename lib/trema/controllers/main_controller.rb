@@ -8,7 +8,7 @@ class MainController < Trema::Controller
     logger.info "Generating rules based on the policies defined in #{ENV['MERLIN_POLICY'].bold}" \
                 " over the topology #{ENV['MERLIN_TOPOLOGY'].bold}..."
     @rules = Havox::Policies.compile!(ENV['MERLIN_TOPOLOGY'], ENV['MERLIN_POLICY'])
-    logger.info "Generated #{@rules.size} Merlin rules."
+    datapath_rules_info
     @datapaths = []
     @datapaths_off = []
   end
@@ -39,5 +39,12 @@ class MainController < Trema::Controller
   def install_rules(dp_id)
     dp_rules = @rules.select { |r| r.dp_id == dp_id }
     # code
+  end
+
+  def datapath_rules_info
+    logger.info "Generated #{@rules.size} Merlin rules."
+    @rules.group_by(&:dp_id).each do |id, rules|
+      logger.info "Datapath s#{id}: #{rules.size} rule(s)"
+    end
   end
 end
