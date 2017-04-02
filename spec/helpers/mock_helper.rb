@@ -21,8 +21,8 @@ module MockHelper
 
   def raw_rule
     '(((switch = 1 and (* and (ethTyp = 2048 and ipDst = 167772162) and '      \
-    'ipSrc = 167772161) and port = 80)) and vlanId = 65535) -> ActionA(0, 2) ' \
-    'ActionB(0)'
+    'ipSrc = 167772161) and port = 80)) and vlanId = 65535) -> Enqueue(0, 2) ' \
+    'Output(0)'
   end
 
   private

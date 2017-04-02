@@ -7,8 +7,8 @@ describe Havox::Rule do
   let(:rule) { FactoryGirl.build :rule }
 
   describe '.new' do
-    let(:action_a) { Hash[action: 'ActionA', arg_a: '0', arg_b: '2'] }
-    let(:action_b) { Hash[action: 'ActionB', arg_a: '0', arg_b: ''] }
+    let(:action_a) { Hash[action: :enqueue, arg_a: '0', arg_b: '2'] }
+    let(:action_b) { Hash[action: :output, arg_a: '0', arg_b: nil] }
 
     it 'parses a Merlin formatted OpenFlow rule' do
       new_rule = Havox::Rule.new(raw_rule)
@@ -27,7 +27,7 @@ describe Havox::Rule do
     it 'stringifies the rule' do
       dp_id_str = "dp_id = #{rule.dp_id}"
       matches_str = "in_port = #{rule.matches[:in_port]}"
-      actions_str = 'Enqueue(1, 1)'
+      actions_str = 'enqueue(1, 1)'
       expect(rule.to_s).to include(dp_id_str, matches_str, actions_str)
     end
   end

@@ -2,21 +2,7 @@ module Havox
   class Rule
     attr_reader :matches, :actions, :dp_id, :raw
 
-    DIC = {
-      'ethSrc'     => 'eth_src',
-      'ethDst'     => 'eth_dst',
-      'ethTyp'     => 'eth_type',                                               # https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml
-      'ipSrc'      => 'ipv4_src',
-      'ipDst'      => 'ipv4_dst',
-      'ipProto'    => 'ip_proto',                                               # http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
-      'nwProto'    => 'ip_proto',
-      'port'       => 'in_port',
-      'switch'     => 'dp_id',
-      'tcpSrcPort' => 'tcp_src',
-      'tcpDstPort' => 'tcp_dst',
-      'vlanId'     => 'vlan_vid',
-      'vlanPcp'    => 'vlan_pcp'
-    }
+    MATCHES_DIC = Havox::OpenFlow10::Dictionary::MATCHES
 
     def initialize(raw)
       @matches = parsed_matches(raw)
@@ -29,7 +15,7 @@ module Havox
       sep = ' AND '
       matches_str = @matches.map { |k, v| "#{k.to_s} = #{v.to_s}" }.join(sep)
       actions_str = @actions.map do |o|
-        %Q(#{o[:action]}(#{o[:arg_a]}#{", #{o[:arg_b]}" unless o[:arg_b].empty?}))
+        %Q(#{o[:action]}(#{o[:arg_a]}#{", #{o[:arg_b]}" unless o[:arg_b].nil?}))
       end
       "#{matches_str} --> #{actions_str.join(sep)}"
     end
@@ -47,9 +33,9 @@ module Havox
       raw_matches = raw_matches.reject(&:empty?)                                # Rejects resulting empty match fields.
       raw_matches.each do |raw_match|
         stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='.
-        ok_matches[DIC[stmt.first].to_sym] = stmt.last                          # Adds a treated entry based on the dictionary.
+        ok_matches[MATCHES_DIC[stmt.first]] = stmt.last                         # Adds a treated entry based on the dictionary.
       end
-      treated(ok_matches)
+      fields_treated(ok_matches)
     end
 
     def parsed_actions(raw_rule)
@@ -60,14 +46,18 @@ module Havox
         regex = /(?<action>\w+)\((?<arg_a>[\w<>]+)[,\s]*(?<arg_b>[\w<>]*)\)/    # Matches raw actions in the format 'Action(x, y)'.
         actions_ok << hashed(raw_action.match(regex))                           # Adds the structured action to the returning array.
       end
-      actions_ok
+      syntax_treated(actions_ok)
     end
 
     def hashed(match_data)
       Hash[match_data.names.map(&:to_sym).zip(match_data.captures)]             # Converts the match data to a hash object.
     end
 
-    def treated(hash)
+    def syntax_treated(actions_array)
+      Havox::OpenFlow10::Actions.syntax_treated(actions_array)
+    end
+
+    def fields_treated(hash)
       hash[:ipv4_src] = parsed_ipv4(hash[:ipv4_src]) unless hash[:ipv4_src].nil?
       hash[:ipv4_dst] = parsed_ipv4(hash[:ipv4_dst]) unless hash[:ipv4_dst].nil?
       hash[:eth_type] = parsed_type(hash[:eth_type]) unless hash[:eth_type].nil?
