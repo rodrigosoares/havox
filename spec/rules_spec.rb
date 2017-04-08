@@ -14,9 +14,9 @@ describe Havox::Rule do
       new_rule = Havox::Rule.new(raw_rule)
       expect(new_rule.dp_id).to eq(1)
       expect(new_rule.matches[:in_port]).to eq('80')
-      expect(new_rule.matches[:eth_type]).to eq('0x0800')
-      expect(new_rule.matches[:ipv4_src]).to eq('10.0.0.1')
-      expect(new_rule.matches[:ipv4_dst]).to eq('10.0.0.2')
+      expect(new_rule.matches[:ether_type]).to eq('0x0800')
+      expect(new_rule.matches[:source_ip_address]).to eq('10.0.0.1')
+      expect(new_rule.matches[:destination_ip_address]).to eq('10.0.0.2')
       expect(new_rule.matches[:vlan_vid]).to eq('65535')
       expect(new_rule.actions).to match_array([action_a, action_b])
     end

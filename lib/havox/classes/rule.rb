@@ -59,9 +59,9 @@ module Havox
     end
 
     def fields_treated(hash)
-      hash[:ipv4_src] = parsed_ipv4(hash[:ipv4_src]) unless hash[:ipv4_src].nil?
-      hash[:ipv4_dst] = parsed_ipv4(hash[:ipv4_dst]) unless hash[:ipv4_dst].nil?
-      hash[:eth_type] = parsed_type(hash[:eth_type]) unless hash[:eth_type].nil?
+      hash[:source_ip_address] = parsed_ipv4(hash[:source_ip_address]) unless hash[:source_ip_address].nil?
+      hash[:destination_ip_address] = parsed_ipv4(hash[:destination_ip_address]) unless hash[:destination_ip_address].nil?
+      hash[:ether_type] = parsed_type(hash[:ether_type]) unless hash[:ether_type].nil?
       hash
     end
 
