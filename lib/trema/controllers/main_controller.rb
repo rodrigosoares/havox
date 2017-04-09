@@ -18,7 +18,7 @@ class MainController < Trema::Controller
     @datapaths_off -= [dp_id]
     dp_name = "s#{dp_id}"
     logger.info "Datapath #{dp_name.bold} is #{'ONLINE'.bold.green}"
-    # install_rules(dp_id)
+    install_rules(dp_id)
   end
 
   def switch_disconnected(dp_id)
@@ -39,15 +39,14 @@ class MainController < Trema::Controller
   def install_rules(dp_id)
     dp_rules = @rules.select { |r| r.dp_id == dp_id }
     flow_mod(dp_id, dp_rules)
+  rescue => e
+    puts e.message
+    puts e.backtrace
   end
 
   def flow_mod(dp_id, dp_rules)
     dp_rules.each do |rule|
-      send_flow_mod_add(
-        dp_id,
-        match: Match.new(rule.matches),
-        actions: action_methods(rule.actions)
-      )
+      send_flow_mod_add(dp_id, match: Pio::Match.new(rule.matches), actions: action_methods(rule.actions))
     end
   end
 

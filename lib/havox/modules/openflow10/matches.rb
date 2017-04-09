@@ -23,9 +23,15 @@ module Havox
       }
 
       def self.fields_treated(hash)
-        hash[:source_ip_address] = parsed_ipv4(hash[:source_ip_address]) unless hash[:source_ip_address].nil?
-        hash[:destination_ip_address] = parsed_ipv4(hash[:destination_ip_address]) unless hash[:destination_ip_address].nil?
-        hash[:ether_type] = parsed_type(hash[:ether_type]) unless hash[:ether_type].nil?
+        hash[:ether_type]                 = parsed_type(hash[:ether_type]) unless hash[:ether_type].nil?
+        hash[:source_ip_address]          = parsed_ipv4(hash[:source_ip_address]) unless hash[:source_ip_address].nil?
+        hash[:destination_ip_address]     = parsed_ipv4(hash[:destination_ip_address]) unless hash[:destination_ip_address].nil?
+        hash[:ip_protocol]                = hash[:ip_protocol].to_i unless hash[:ip_protocol].nil?
+        hash[:in_port]                    = hash[:in_port].to_i unless hash[:in_port].nil?
+        hash[:transport_source_port]      = hash[:transport_source_port].to_i unless hash[:transport_source_port].nil?
+        hash[:transport_destination_port] = hash[:transport_destination_port].to_i unless hash[:transport_destination_port].nil?
+        hash[:vlan_vid]                   = hash[:vlan_vid].to_i unless hash[:vlan_vid].nil?
+        hash[:vlan_priority]              = hash[:vlan_priority].to_i unless hash[:vlan_priority].nil?
         hash
       end
 
