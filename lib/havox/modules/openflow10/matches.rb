@@ -23,7 +23,7 @@ module Havox
       }
 
       def self.fields_treated(hash)
-        hash[:ether_type]                 = parsed_type(hash[:ether_type]) unless hash[:ether_type].nil?
+        hash[:ether_type]                 = hash[:ether_type].to_i unless hash[:ether_type].nil?
         hash[:source_ip_address]          = parsed_ipv4(hash[:source_ip_address]) unless hash[:source_ip_address].nil?
         hash[:destination_ip_address]     = parsed_ipv4(hash[:destination_ip_address]) unless hash[:destination_ip_address].nil?
         hash[:ip_protocol]                = hash[:ip_protocol].to_i unless hash[:ip_protocol].nil?
@@ -41,10 +41,6 @@ module Havox
         bits = ip_integer.to_i.to_s(2).rjust(32, '0')                           # Transforms the string number into a 32-bit sequence.
         octets = bits.scan(/\d{8}/).map { |octet_bits| octet_bits.to_i(2) }     # Splits the sequence into decimal octets.
         octets.join('.')                                                        # Returns the joined octets.
-      end
-
-      def self.parsed_type(ether_type)
-        "0x#{ether_type.to_i.to_s(16).rjust(4, '0')}"
       end
     end
   end
