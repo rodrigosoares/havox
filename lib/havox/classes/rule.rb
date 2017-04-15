@@ -65,7 +65,7 @@ module Havox
 
     def already_set?(matches_hash, stmt)
       field = FIELDS_DIC[stmt.first]
-      unless matches_hash[field].nil?
+      unless matches_hash[field].nil? || matches_hash[field].eql?(stmt.last)
         raise Havox::Merlin::FieldConflict,
           "Attempted to define field '#{field}' with #{stmt.last}, but it is " \
           "already defined with #{matches_hash[field]}"
