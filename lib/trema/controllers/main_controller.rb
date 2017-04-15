@@ -5,14 +5,12 @@ class MainController < Trema::Controller
   timer_event :datapath_statuses, interval: 10.sec
 
   def start(_argv)
-    @datapaths = []
-    @datapaths_off = []
+    initialize_instance_vars
     logger.info "Generating rules based on the policies defined in #{ENV['MERLIN_POLICY'].bold}" \
                 " over the topology #{ENV['MERLIN_TOPOLOGY'].bold}..."
     @rules = Havox::Policies.compile!(ENV['MERLIN_TOPOLOGY'], ENV['MERLIN_POLICY'])
     datapath_rules_info
   rescue => e
-    @rules = []
     handle_exception(e)
   end
 
@@ -83,5 +81,11 @@ class MainController < Trema::Controller
   def handle_exception(e)
     puts e.message
     puts e.backtrace
+  end
+
+  def initialize_instance_vars
+    @datapaths = []
+    @datapaths_off = []
+    @rules = []
   end
 end
