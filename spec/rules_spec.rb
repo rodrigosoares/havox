@@ -20,6 +20,10 @@ describe Havox::Rule do
       expect(new_rule.matches[:vlan_vid]).to eq(65535)
       expect(new_rule.actions).to match_array([action_a, action_b])
     end
+
+    it 'raises a field conflict exception if a rule has a field conflict' do
+      expect { Havox::Rule.new(conflicting_raw_rule) }.to raise_error(Havox::Merlin::FieldConflict)
+    end
   end
 
   describe '#to_s' do

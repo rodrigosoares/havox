@@ -33,7 +33,7 @@ module Havox
 
       def check_for_errors(result)
         error_msg = result.scan(ERROR_REGEX).flatten.first
-        raise Havox::MerlinError, error_msg unless error_msg.nil?
+        raise Havox::Merlin::ParsingError, error_msg unless error_msg.nil?
       end
 
       def basename(path)

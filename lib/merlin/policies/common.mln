@@ -3,7 +3,7 @@ exits_a := { h20 };
 exits_b := { h60 };
 
 foreach (s, d): cross(srcs, exits_a)
-  ethTyp = 2048 and ipProto = 6 and tcpDstPort = 80 -> .* s2 at min(100 Mbps);
+  ethTyp = 2048 and ipProto = 17 and tcpDstPort = 80 -> .* s2 at min(100 Mbps);
 
 foreach (s, d): cross(srcs, exits_b)
-  ethTyp = 2048 and ipProto = 6 and tcpDstPort = 25 -> .* s6 at min(100 Mbps);
+  ethTyp = 2048 and ipProto = 17 and tcpDstPort = 25 -> .* s6 at min(100 Mbps);

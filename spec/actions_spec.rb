@@ -19,11 +19,11 @@ describe Havox::OpenFlow10::Actions do
     end
 
     it 'raises an error if an unpredicted action is found' do
-      expect { subject.syntax_treated([mln_unknown]) }.to raise_error(Havox::UnpredictedAction)
+      expect { subject.syntax_treated([mln_unknown]) }.to raise_error(Havox::Trema::UnpredictedAction)
     end
 
     it 'raises an error if a set unknown field action is found' do
-      expect { subject.syntax_treated([mln_set_field_port]) }.to raise_error(Havox::UnpredictedAction)
+      expect { subject.syntax_treated([mln_set_field_port]) }.to raise_error(Havox::Trema::UnpredictedAction)
     end
   end
 end

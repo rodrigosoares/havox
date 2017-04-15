@@ -25,6 +25,12 @@ module MockHelper
     'Output(0)'
   end
 
+  def conflicting_raw_rule
+    '(((switch = 1 and (* and (ethTyp = 2048 and ipDst = 167772162) and '      \
+    'and nwProto = 17 and ipSrc = 167772161) and nwProto = 6 and port = 80)) ' \
+    'and vlanId = 65535) -> Enqueue(0, 2) Output(0)'
+  end
+
   private
 
   def openflow_rules(empty)

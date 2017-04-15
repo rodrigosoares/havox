@@ -64,7 +64,7 @@ class MainController < Trema::Controller
         when :enqueue      then Pio::OpenFlow10::SendOutPort.new(obj[:arg_a].to_i)
         when :strip_vlan   then Pio::OpenFlow10::StripVlanHeader.new
         when :set_vlan_vid then Pio::OpenFlow10::SetVlanVid.new(obj[:arg_a].to_i)
-        else raise Havox::UnpredictedAction,
+        else raise Havox::Trema::UnpredictedAction,
           "No method associated with action '#{obj[:action]}'"
         end
     end

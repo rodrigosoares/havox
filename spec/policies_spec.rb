@@ -33,7 +33,7 @@ describe Havox::Policies do
 
     it 'raises an error if Merlin encounters an exception' do
       allow(subject).to receive(:run).and_return(merlin_error_response)
-      expect { subject.compile('/foo.dot', 'foo.mln') }.to raise_error(Havox::MerlinError)
+      expect { subject.compile('/foo.dot', 'foo.mln') }.to raise_error(Havox::Merlin::ParsingError)
     end
   end
 

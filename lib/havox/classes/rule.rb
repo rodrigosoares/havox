@@ -34,7 +34,8 @@ module Havox
       raw_matches = raw_matches.reject(&:empty?)                                # Rejects resulting empty match fields.
       raw_matches.each do |raw_match|
         stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='.
-        ok_matches[FIELDS_DIC[stmt.first]] = stmt.last                          # Adds a treated entry based on the dictionary.
+        field = FIELDS_DIC[stmt.first]
+        ok_matches[field] = stmt.last unless already_set?(ok_matches, stmt)     # Adds a treated entry based on the dictionary.
       end
       fields_treated(ok_matches)
     end
@@ -60,6 +61,16 @@ module Havox
 
     def syntax_treated(actions_array)
       Havox::OpenFlow10::Actions.syntax_treated(actions_array)
+    end
+
+    def already_set?(matches_hash, stmt)
+      field = FIELDS_DIC[stmt.first]
+      unless matches_hash[field].nil?
+        raise Havox::Merlin::FieldConflict,
+          "Attempted to define field '#{field}' with #{stmt.last}, but it is " \
+          "already defined with #{matches_hash[field]}"
+      end
+      false
     end
   end
 end
