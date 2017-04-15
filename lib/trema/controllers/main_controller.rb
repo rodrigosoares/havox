@@ -46,7 +46,11 @@ class MainController < Trema::Controller
 
   def flow_mod(dp_id, dp_rules)
     dp_rules.each do |rule|
-      send_flow_mod_add(dp_id, match: Pio::Match.new(rule.matches), actions: action_methods(rule.actions))
+      send_flow_mod_add(
+        dp_id,
+        match: Pio::Match.new(rule.matches),
+        actions: action_methods(rule.actions)
+      )
     end
   end
 

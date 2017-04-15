@@ -15,49 +15,49 @@ digraph g1 {
   s5 [type = switch, ip = "11.0.0.5", id = 5];
   s6 [type = switch, ip = "11.0.0.6", id = 6];
 
-  s1 -> h1  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
-  h1 -> s1  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
+  s1 -> h1  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  h1 -> s1  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
 
-  s2 -> h2  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
-  h2 -> s2  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
+  s2 -> h2  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  h2 -> s2  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
 
-  s3 -> h3  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
-  h3 -> s3  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
+  s3 -> h3  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  h3 -> s3  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
 
-  s4 -> h4  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
-  h4 -> s4  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
+  s4 -> h4  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  h4 -> s4  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
 
-  s5 -> h5  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
-  h5 -> s5  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
+  s5 -> h5  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  h5 -> s5  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
 
-  s6 -> h6  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
-  h6 -> s6  [src_port = 0, dst_port = 0, cost = 1, capacity = "1Gbps"];
+  s6 -> h6  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  h6 -> s6  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
 
-  s2 -> h20 [src_port = 4, dst_port = 0, cost = 1, capacity = "1Gbps"];
-  h20 -> s2 [src_port = 4, dst_port = 0, cost = 1, capacity = "1Gbps"];
+  s2 -> h20 [src_port = 5, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  h20 -> s2 [src_port = 5, dst_port = 1, cost = 1, capacity = "1Gbps"];
 
-  s6 -> h60 [src_port = 3, dst_port = 0, cost = 1, capacity = "1Gbps"];
-  h60 -> s6 [src_port = 3, dst_port = 0, cost = 1, capacity = "1Gbps"];
+  s6 -> h60 [src_port = 4, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  h60 -> s6 [src_port = 4, dst_port = 1, cost = 1, capacity = "1Gbps"];
 
-  s1 -> s2  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
-  s1 -> s3  [src_port = 2, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  s1 -> s2  [src_port = 2, dst_port = 2, cost = 1, capacity = "1Gbps"];
+  s1 -> s3  [src_port = 3, dst_port = 2, cost = 1, capacity = "1Gbps"];
 
-  s2 -> s1  [src_port = 1, dst_port = 1, cost = 1, capacity = "1Gbps"];
-  s2 -> s3  [src_port = 2, dst_port = 2, cost = 1, capacity = "1Gbps"];
-  s2 -> s4  [src_port = 3, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  s2 -> s1  [src_port = 2, dst_port = 2, cost = 1, capacity = "1Gbps"];
+  s2 -> s3  [src_port = 3, dst_port = 3, cost = 1, capacity = "1Gbps"];
+  s2 -> s4  [src_port = 4, dst_port = 2, cost = 1, capacity = "1Gbps"];
 
-  s3 -> s1  [src_port = 1, dst_port = 2, cost = 1, capacity = "1Gbps"];
-  s3 -> s2  [src_port = 2, dst_port = 2, cost = 1, capacity = "1Gbps"];
-  s3 -> s4  [src_port = 3, dst_port = 2, cost = 1, capacity = "1Gbps"];
-  s3 -> s5  [src_port = 4, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  s3 -> s1  [src_port = 2, dst_port = 3, cost = 1, capacity = "1Gbps"];
+  s3 -> s2  [src_port = 3, dst_port = 3, cost = 1, capacity = "1Gbps"];
+  s3 -> s4  [src_port = 4, dst_port = 3, cost = 1, capacity = "1Gbps"];
+  s3 -> s5  [src_port = 5, dst_port = 2, cost = 1, capacity = "1Gbps"];
 
-  s4 -> s2  [src_port = 1, dst_port = 3, cost = 1, capacity = "1Gbps"];
-  s4 -> s3  [src_port = 2, dst_port = 3, cost = 1, capacity = "1Gbps"];
-  s4 -> s6  [src_port = 3, dst_port = 1, cost = 1, capacity = "1Gbps"];
+  s4 -> s2  [src_port = 2, dst_port = 4, cost = 1, capacity = "1Gbps"];
+  s4 -> s3  [src_port = 3, dst_port = 4, cost = 1, capacity = "1Gbps"];
+  s4 -> s6  [src_port = 4, dst_port = 2, cost = 1, capacity = "1Gbps"];
 
-  s5 -> s3  [src_port = 1, dst_port = 4, cost = 1, capacity = "1Gbps"];
-  s5 -> s6  [src_port = 2, dst_port = 2, cost = 1, capacity = "1Gbps"];
+  s5 -> s3  [src_port = 2, dst_port = 5, cost = 1, capacity = "1Gbps"];
+  s5 -> s6  [src_port = 3, dst_port = 3, cost = 1, capacity = "1Gbps"];
 
-  s6 -> s4  [src_port = 1, dst_port = 3, cost = 1, capacity = "1Gbps"];
-  s6 -> s5  [src_port = 2, dst_port = 2, cost = 1, capacity = "1Gbps"];
+  s6 -> s4  [src_port = 2, dst_port = 4, cost = 1, capacity = "1Gbps"];
+  s6 -> s5  [src_port = 3, dst_port = 3, cost = 1, capacity = "1Gbps"];
 }
