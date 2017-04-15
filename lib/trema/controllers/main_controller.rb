@@ -5,12 +5,15 @@ class MainController < Trema::Controller
   timer_event :datapath_statuses, interval: 10.sec
 
   def start(_argv)
+    @datapaths = []
+    @datapaths_off = []
     logger.info "Generating rules based on the policies defined in #{ENV['MERLIN_POLICY'].bold}" \
                 " over the topology #{ENV['MERLIN_TOPOLOGY'].bold}..."
     @rules = Havox::Policies.compile!(ENV['MERLIN_TOPOLOGY'], ENV['MERLIN_POLICY'])
     datapath_rules_info
-    @datapaths = []
-    @datapaths_off = []
+  rescue => e
+    @rules = []
+    handle_exception(e)
   end
 
   def switch_ready(dp_id)
@@ -19,6 +22,8 @@ class MainController < Trema::Controller
     dp_name = "s#{dp_id}"
     logger.info "Datapath #{dp_name.bold} is #{'ONLINE'.bold.green}"
     install_rules(dp_id)
+  rescue => e
+    handle_exception(e)
   end
 
   def switch_disconnected(dp_id)
@@ -38,10 +43,7 @@ class MainController < Trema::Controller
 
   def install_rules(dp_id)
     dp_rules = @rules.select { |r| r.dp_id == dp_id }
-    flow_mod(dp_id, dp_rules)
-  rescue => e
-    puts e.message
-    puts e.backtrace
+    flow_mod(dp_id, dp_rules) if dp_rules.any?
   end
 
   def flow_mod(dp_id, dp_rules)
@@ -76,5 +78,10 @@ class MainController < Trema::Controller
     @rules.group_by(&:dp_id).each do |id, rules|
       logger.info "Datapath s#{id}: #{rules.size} rule(s)"
     end
+  end
+
+  def handle_exception(e)
+    puts e.message
+    puts e.backtrace
   end
 end
