@@ -51,12 +51,12 @@ describe Havox::Policies do
     end
 
     it 'uploads and compiles the files at the default remote path' do
-      expect(subject).to receive(:compile).with(remote_topology_file, remote_policy_file)
+      expect(subject).to receive(:compile).with(remote_topology_file, remote_policy_file, false)
       subject.compile!(local_topology_file, local_policy_file)
     end
 
     it 'uploads and compiles the files at an arbitrary remote path' do
-      expect(subject).to receive(:compile).with(remote_dst_topology_file, remote_dst_policy_file)
+      expect(subject).to receive(:compile).with(remote_dst_topology_file, remote_dst_policy_file, false)
       subject.compile!(local_topology_file, local_policy_file, '/remote/path/to/')
     end
   end

@@ -53,20 +53,20 @@ module Havox
       true
     end
 
-    def self.compile(topology_file, policy_file)
+    def self.compile(topology_file, policy_file, force = false)
       rules = []
       result = run(cmd.compile(topology_file, policy_file))                     # Runs Merlin in the remote VM and retrieves its output.
       result = parse(result)                                                    # Parses the output into raw rules.
-      result.each { |raw_rule| rules << Havox::Rule.new(raw_rule) }             # Creates Rule instances for each raw rule.
+      result.each { |raw_rule| rules << Havox::Rule.new(raw_rule, force) }      # Creates Rule instances for each raw rule.
       rules
     end
 
-    def self.compile!(topology_file, policy_file, dst = nil)
+    def self.compile!(topology_file, policy_file, dst = nil, force = false)
       dst ||= "#{config.merlin_path}/examples/"
       if upload!(topology_file, dst) && upload!(policy_file, dst)
         topology_file = "#{dst}#{basename(topology_file)}"
         policy_file = "#{dst}#{basename(policy_file)}"
-        compile(topology_file, policy_file)
+        compile(topology_file, policy_file, force)
       end
     end
   end

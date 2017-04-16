@@ -4,8 +4,8 @@ module Havox
 
     FIELDS_DIC = Havox::OpenFlow10::Matches::FIELDS
 
-    def initialize(raw)
-      @matches = parsed_matches(raw)
+    def initialize(raw, force = false)
+      @matches = parsed_matches(raw, force)
       @actions = parsed_actions(raw)
       @dp_id = @matches[:dp_id].to_i
       @matches.delete(:dp_id)
@@ -27,15 +27,15 @@ module Havox
 
     private
 
-    def parsed_matches(raw_rule)
+    def parsed_matches(raw_rule, force)
       ok_matches = {}
       raw_matches = raw_rule.split('->').first.split('and')                     # Parses each match field in the 1st part.
       raw_matches = raw_matches.map { |str| str.tr('()*', '').strip }           # Removes unwanted characters.
       raw_matches = raw_matches.reject(&:empty?)                                # Rejects resulting empty match fields.
-      raw_matches.each do |raw_match|
+      raw_matches.each do |raw_match|                                           # Parses and adds each match based on the dictionary.
         stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='.
-        field = FIELDS_DIC[stmt.first]
-        ok_matches[field] = stmt.last unless already_set?(ok_matches, stmt)     # Adds a treated entry based on the dictionary.
+        field = FIELDS_DIC[stmt.first]                                          # Gets the right field by the raw field name.
+        ok_matches[field] = stmt.last unless already_set?(ok_matches, stmt, force)
       end
       fields_treated(ok_matches)
     end
@@ -63,14 +63,21 @@ module Havox
       Havox::OpenFlow10::Actions.syntax_treated(actions_array)
     end
 
-    def already_set?(matches_hash, stmt)
+    def already_set?(matches_hash, stmt, force)
       field = FIELDS_DIC[stmt.first]
       unless matches_hash[field].nil? || matches_hash[field].eql?(stmt.last)
-        raise Havox::Merlin::FieldConflict,
-          "Attempted to define field '#{field}' with #{stmt.last}, but it is " \
-          "already defined with #{matches_hash[field]}"
+        return ignore_conflict?(field, matches_hash[field], stmt.last, force)
       end
       false
+    end
+
+    def ignore_conflict?(field, old_value, new_value, force)
+      unless force
+        raise Havox::Merlin::FieldConflict,
+          "Attempted to define field '#{field}' with #{new_value}, but it is " \
+          "already defined with #{old_value}"
+      end
+      true
     end
   end
 end

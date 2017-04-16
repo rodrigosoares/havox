@@ -21,8 +21,16 @@ describe Havox::Rule do
       expect(new_rule.actions).to match_array([action_a, action_b])
     end
 
-    it 'raises a field conflict exception if a rule has a field conflict' do
-      expect { Havox::Rule.new(conflicting_raw_rule) }.to raise_error(Havox::Merlin::FieldConflict)
+    context 'when the rule has a field conflict' do
+      it 'raises an error by default' do
+        expect { Havox::Rule.new(conflicting_raw_rule) }.to raise_error(Havox::Merlin::FieldConflict)
+      end
+
+      it 'does not raise an error if forced by the user' do
+        new_rule = nil
+        expect { new_rule = Havox::Rule.new(conflicting_raw_rule, true) }.not_to raise_error
+        expect(new_rule.matches[:ip_protocol]).to eq(17)
+      end
     end
   end
 
