@@ -61,7 +61,7 @@ module Havox
       rules
     end
 
-    def self.compile!(topology_file, policy_file, dst = nil, force = false)
+    def self.compile!(topology_file, policy_file, force = false, dst = nil)
       dst ||= "#{config.merlin_path}/examples/"
       if upload!(topology_file, dst) && upload!(policy_file, dst)
         topology_file = "#{dst}#{basename(topology_file)}"

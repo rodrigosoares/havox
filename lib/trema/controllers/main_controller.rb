@@ -6,9 +6,10 @@ class MainController < Trema::Controller
 
   def start(_argv)
     initialize_instance_vars
-    logger.info "Generating rules based on the policies defined in #{ENV['MERLIN_POLICY'].bold}" \
-                " over the topology #{ENV['MERLIN_TOPOLOGY'].bold}..."
-    @rules = Havox::Policies.compile!(ENV['MERLIN_TOPOLOGY'], ENV['MERLIN_POLICY'])
+    logger.info "Generating rules based on the policies defined in #{ENV['HAVOX_MERLIN_POLICY'].bold}" \
+                " over the topology #{ENV['HAVOX_MERLIN_TOPOLOGY'].bold}..."
+    force = ENV['HAVOX_FORCE'].eql?('true')
+    @rules = Havox::Policies.compile!(ENV['HAVOX_MERLIN_TOPOLOGY'], ENV['HAVOX_MERLIN_POLICY'], force)
     datapath_rules_info
   rescue => e
     handle_exception(e)

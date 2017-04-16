@@ -1,9 +1,10 @@
 6.times do |i|
   id = i + 1
+  id_hex = id.to_s(16).rjust(2, '0')
 
   vhost "h#{id}" do
     ip  "10.0.0.#{id}"
-    mac "00:00:00:00:00:#{id}"
+    mac "00:00:00:00:00:#{id_hex}"
   end
 
   vswitch "s#{id}" do
@@ -15,9 +16,11 @@
 end
 
 %w(20 60).each do |id|
+  id_hex = id.to_i.to_s(16).rjust(2, '0')
+
   vhost "h#{id}" do
     ip  "10.0.0.#{id}"
-    mac "00:00:00:00:00:#{id}"
+    mac "00:00:00:00:00:#{id_hex}"
   end
 
   link "h#{id}", "s#{id.to_i / 10}"

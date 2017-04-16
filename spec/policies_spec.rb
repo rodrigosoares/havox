@@ -57,7 +57,7 @@ describe Havox::Policies do
 
     it 'uploads and compiles the files at an arbitrary remote path' do
       expect(subject).to receive(:compile).with(remote_dst_topology_file, remote_dst_policy_file, false)
-      subject.compile!(local_topology_file, local_policy_file, '/remote/path/to/')
+      subject.compile!(local_topology_file, local_policy_file, false, '/remote/path/to/')
     end
   end
 
