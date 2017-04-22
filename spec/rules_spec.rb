@@ -32,6 +32,15 @@ describe Havox::Rule do
         expect(new_rule.matches[:ip_protocol]).to eq(17)
       end
     end
+
+    context 'when the rule has integer fields in two\'s complement' do
+      let(:tc_rule) { FactoryGirl.build :rule, :two_complement }
+
+      it 'parses the IP address correctly' do
+        expect(tc_rule.matches[:source_ip_address]).to eq('192.168.1.40')
+        expect(tc_rule.matches[:destination_ip_address]).to eq('192.168.1.20')
+      end
+    end
   end
 
   describe '#to_s' do

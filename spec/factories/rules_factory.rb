@@ -15,5 +15,12 @@ FactoryGirl.define do
     end
 
     initialize_with { new(raw) }
+
+    trait :two_complement do
+      transient do
+        ipv4_src '-1062731480'
+        ipv4_dst '-1062731500'
+      end
+    end
   end
 end
