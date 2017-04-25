@@ -1,9 +1,10 @@
 4.times do |i|
   id = i + 1
 
-  vhost "h#{id}" do
-    ip  "10.0.0.#{id}"
-    mac "00:00:00:00:00:#{id}"
+  netns "h#{id}" do
+    ip  "10.0.0.#{id * 10}"
+    netmask '255.255.255.0'
+    route net: '0.0.0.0', gateway: '10.0.0.1'
   end
 
   vswitch "s#{id}" do
