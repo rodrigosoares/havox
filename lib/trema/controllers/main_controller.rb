@@ -3,6 +3,7 @@ require 'colorize'
 
 class MainController < Trema::Controller
   timer_event :datapath_statuses, interval: 10.sec
+  timer_event :age_arp_tables, interval: 5.sec
 
   def start(_argv)
     initialize_instance_vars
@@ -16,6 +17,7 @@ class MainController < Trema::Controller
   end
 
   def switch_ready(dp_id)
+    @arp_tables[dp_id] = Havox::ARPTable.new
     @datapaths << dp_id
     @datapaths_off -= [dp_id]
     dp_name = "s#{dp_id}"
@@ -26,10 +28,22 @@ class MainController < Trema::Controller
   end
 
   def switch_disconnected(dp_id)
+    @arp_tables.delete(dp_id)
     @datapaths -= [dp_id]
     @datapaths_off << dp_id
     dp_name = "s#{dp_id}"
     logger.info "Datapath #{dp_name.bold} is #{'OFFLINE'.bold.red}"
+  end
+
+  def packet_in(dp_id, packet_in)
+    logger.info "#{packet_in.data.class.name}"
+    # case packet_in.data.class.name
+    # when 'Pio::Arp::Request' then logger.info "ARP REQUEST data = #{packet_in.data.inspect}"
+    # else logger.info "PING! dp_id = #{packet_in.datapath_id}, data = #{packet_in.data}"
+    # end
+    return if packet_in.destination_mac.reserved?
+    @arp_tables[dp_id].learn!(packet_in.source_mac, packet_in.in_port)
+    flow_mod_and_packet_out(packet_in)
   end
 
   private
@@ -40,12 +54,19 @@ class MainController < Trema::Controller
     logger.info "Datapath statuses: [#{datapaths_on}] [#{datapaths_off}]"
   end
 
-  def install_rules(dp_id)
-    dp_rules = @rules.select { |r| r.dp_id == dp_id }
-    flow_mod(dp_id, dp_rules) if dp_rules.any?
+  def flow_mod_and_packet_out(packet_in)
+    port = @arp_tables[packet_in.dpid].lookup(packet_in.destination_mac)
+    logger.info "port = #{port}, dst_mac = #{packet_in.destination_mac}"
+    flow_mod(packet_in, port) unless port.nil?
+    packet_out(packet_in, port || :flood)                                       # FIXME: Port is null, so it floods forever.
   end
 
-  def flow_mod(dp_id, dp_rules)
+  def install_rules(dp_id)
+    dp_rules = @rules.select { |r| r.dp_id == dp_id }
+    flow_mod_rules(dp_id, dp_rules) if dp_rules.any?
+  end
+
+  def flow_mod_rules(dp_id, dp_rules)
     dp_rules.each do |rule|
       send_flow_mod_add(
         dp_id,
@@ -79,6 +100,26 @@ class MainController < Trema::Controller
     end
   end
 
+  def flow_mod(packet_in, port)
+    send_flow_mod_add(
+      packet_in.dpid,
+      match: Pio::ExactMatch.new(packet_in),
+      actions: Pio::OpenFlow10::SendOutPort.new(port)
+    )
+  end
+
+  def packet_out(packet_in, port)
+    send_packet_out(
+      packet_in.dpid,
+      packet_in: packet_in,
+      actions: Pio::OpenFlow10::SendOutPort.new(port)
+    )
+  end
+
+  def age_arp_tables
+    @arp_tables.each_value(&:age!)
+  end
+
   def handle_exception(e)
     puts e.message
     puts e.backtrace
@@ -88,5 +129,6 @@ class MainController < Trema::Controller
     @datapaths = []
     @datapaths_off = []
     @rules = []
+    @arp_tables = {}
   end
 end
