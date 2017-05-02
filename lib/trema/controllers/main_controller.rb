@@ -36,12 +36,9 @@ class MainController < Trema::Controller
   end
 
   def packet_in(dp_id, packet_in)
-    logger.info "#{packet_in.data.class.name}"
-    # case packet_in.data.class.name
-    # when 'Pio::Arp::Request' then logger.info "ARP REQUEST data = #{packet_in.data.inspect}"
-    # else logger.info "PING! dp_id = #{packet_in.datapath_id}, data = #{packet_in.data}"
-    # end
-    return if packet_in.destination_mac.reserved?
+    return if packet_in.destination_mac.reserved? || packet_in.destination_mac.multicast?
+    logger.info "in_port = #{packet_in.in_port}, src_mac = #{packet_in.source_mac}, " \
+                "dst_mac = #{packet_in.destination_mac}, dp_id = #{packet_in.dpid}"
     @arp_tables[dp_id].learn!(packet_in.source_mac, packet_in.in_port)
     flow_mod_and_packet_out(packet_in)
   end
@@ -56,9 +53,8 @@ class MainController < Trema::Controller
 
   def flow_mod_and_packet_out(packet_in)
     port = @arp_tables[packet_in.dpid].lookup(packet_in.destination_mac)
-    logger.info "port = #{port}, dst_mac = #{packet_in.destination_mac}"
     flow_mod(packet_in, port) unless port.nil?
-    packet_out(packet_in, port || :flood)                                       # FIXME: Port is null, so it floods forever.
+    packet_out(packet_in, port || :flood)
   end
 
   def install_rules(dp_id)
