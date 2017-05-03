@@ -37,8 +37,7 @@ class MainController < Trema::Controller
 
   def packet_in(dp_id, packet_in)
     return if packet_in.destination_mac.reserved? || packet_in.destination_mac.multicast?
-    logger.info "in_port = #{packet_in.in_port}, src_mac = #{packet_in.source_mac}, " \
-                "dst_mac = #{packet_in.destination_mac}, dp_id = #{packet_in.dpid}"
+    packet_details(packet_in)
     @arp_tables[dp_id].learn!(packet_in.source_mac, packet_in.in_port)
     flow_mod_and_packet_out(packet_in)
   end
@@ -119,6 +118,12 @@ class MainController < Trema::Controller
   def handle_exception(e)
     puts e.message
     puts e.backtrace
+  end
+
+  def packet_details(packet_in)
+    logger.info "#{packet_in.data.class.name}: dp_id = #{packet_in.dpid}, " \
+                "in_port = #{packet_in.in_port}, src_mac = #{packet_in.source_mac}, " \
+                "dst_mac = #{packet_in.destination_mac}"
   end
 
   def initialize_instance_vars
