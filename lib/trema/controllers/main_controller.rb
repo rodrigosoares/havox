@@ -3,7 +3,6 @@ require 'colorize'
 
 class MainController < Trema::Controller
   timer_event :datapath_statuses, interval: 10.sec
-  timer_event :age_arp_tables, interval: 5.sec
 
   def start(_argv)
     initialize_instance_vars
@@ -17,7 +16,6 @@ class MainController < Trema::Controller
   end
 
   def switch_ready(dp_id)
-    @arp_tables[dp_id] = Havox::ARPTable.new
     @datapaths << dp_id
     @datapaths_off -= [dp_id]
     dp_name = "s#{dp_id}"
@@ -28,7 +26,6 @@ class MainController < Trema::Controller
   end
 
   def switch_disconnected(dp_id)
-    @arp_tables.delete(dp_id)
     @datapaths -= [dp_id]
     @datapaths_off << dp_id
     dp_name = "s#{dp_id}"
@@ -36,10 +33,7 @@ class MainController < Trema::Controller
   end
 
   def packet_in(dp_id, packet_in)
-    return if packet_in.destination_mac.reserved? || packet_in.destination_mac.multicast?
     packet_details(packet_in)
-    @arp_tables[dp_id].learn!(packet_in.source_mac, packet_in.in_port)
-    flow_mod_and_packet_out(packet_in)
   end
 
   private
@@ -48,12 +42,6 @@ class MainController < Trema::Controller
     datapaths_on  = @datapaths.map { |id| "s#{id}" }.join(' ').bold.green
     datapaths_off = @datapaths_off.map { |id| "s#{id}" }.join(' ').bold.red
     logger.info "Datapath statuses: [#{datapaths_on}] [#{datapaths_off}]"
-  end
-
-  def flow_mod_and_packet_out(packet_in)
-    port = @arp_tables[packet_in.dpid].lookup(packet_in.destination_mac)
-    flow_mod(packet_in, port) unless port.nil?
-    packet_out(packet_in, port || :flood)
   end
 
   def install_rules(dp_id)
@@ -95,41 +83,20 @@ class MainController < Trema::Controller
     end
   end
 
-  def flow_mod(packet_in, port)
-    send_flow_mod_add(
-      packet_in.dpid,
-      match: Pio::ExactMatch.new(packet_in),
-      actions: Pio::OpenFlow10::SendOutPort.new(port)
-    )
-  end
-
-  def packet_out(packet_in, port)
-    send_packet_out(
-      packet_in.dpid,
-      packet_in: packet_in,
-      actions: Pio::OpenFlow10::SendOutPort.new(port)
-    )
-  end
-
-  def age_arp_tables
-    @arp_tables.each_value(&:age!)
-  end
-
   def handle_exception(e)
     puts e.message
     puts e.backtrace
   end
 
   def packet_details(packet_in)
-    logger.info "#{packet_in.data.class.name}: dp_id = #{packet_in.dpid}, " \
-                "in_port = #{packet_in.in_port}, src_mac = #{packet_in.source_mac}, " \
-                "dst_mac = #{packet_in.destination_mac}"
+    logger.info "#{packet_in.data.class.name}: dp_id=#{packet_in.dpid} " \
+                "in_port=#{packet_in.in_port} src_mac=#{packet_in.source_mac} " \
+                "dst_mac=#{packet_in.destination_mac} inspection=#{packet_in.inspect}"
   end
 
   def initialize_instance_vars
     @datapaths = []
     @datapaths_off = []
     @rules = []
-    @arp_tables = {}
   end
 end

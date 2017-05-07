@@ -1,5 +1,15 @@
 srcs := { h1; h2 };
 dsts := { h4 };
+all  := { h1; h2; h3; h4 };
 
 foreach (s, d): cross(srcs, dsts)
-  ethTyp = 2048 and ipProto = 17 and tcpDstPort = 80 -> .* s2 s3 .* at min(100 Mbps);
+  ethTyp = 2048 and ipProto = 6 and tcpDstPort = 80 -> .* s2 s3 .* at min(100 Mbps);
+
+foreach (s, d): cross(dsts, srcs)
+  ethTyp = 2048 and ipProto = 6 and tcpSrcPort = 80 -> .* s3 s2 .* at min(100 Mbps);
+
+foreach (s, d): cross(all, all)
+  ethTyp = 2048 and ipProto = 1 -> .* at min(100 Mbps);
+
+foreach (s, d): cross(all, all)
+  ethTyp = 2054 -> .* at min(100 Mbps);
