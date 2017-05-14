@@ -31,6 +31,15 @@ module MockHelper
     'and vlanId = 65535) -> Enqueue(0, 2) Output(0)'
   end
 
+  def topology_file_content
+    "digraph g1 {\n  h1 [type = host];\n  h2 [type = host];\n}\n"
+  end
+
+  def policy_file_content
+    "all := { h1; h2 };\nforeach (s, d): cross(all, all)\n  ipProto = 6 -> .*" \
+    " at min(100 Mbps);\n"
+  end
+
   private
 
   def openflow_rules(empty)
