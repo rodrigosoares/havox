@@ -19,7 +19,7 @@ module Havox
     def translation_module(lang)
       case lang
       when :trema then Havox::OpenFlow10::Trema
-      # when :ovs   then Havox::OpenFlow10::OVS
+      when :ovs   then Havox::OpenFlow10::OVS
       else raise_unknown_translator(lang)
       end
     end

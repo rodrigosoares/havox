@@ -10,7 +10,6 @@ describe Havox::Translator do
       end
 
       it 'for OpenVSwitch' do
-        pending 'implement translation for OVS'
         expect(subject.fields_to(:ovs)).to be_a(Hash)
       end
     end
@@ -30,7 +29,6 @@ describe Havox::Translator do
       end
 
       it 'for OpenVSwitch' do
-        pending 'implement translation for OVS'
         expect(Havox::OpenFlow10::OVS::Matches).to receive(:treat).with(trema_hash)
         subject.matches_to(:ovs, trema_hash)
       end
@@ -51,7 +49,6 @@ describe Havox::Translator do
       end
 
       it 'for OpenVSwitch' do
-        pending 'implement translation for OVS'
         expect(Havox::OpenFlow10::OVS::Actions).to receive(:treat).with([mln_action])
         subject.actions_to(:ovs, [mln_action])
       end
