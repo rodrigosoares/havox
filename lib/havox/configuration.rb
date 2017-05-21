@@ -5,7 +5,7 @@ module Havox
       :protocol_daemons
 
     def initialize
-      @rf_host          = '10.0.30.191'
+      @rf_host          = '192.168.56.102'
       @rf_user          = 'routeflow'
       @rf_password      = 'routeflow'
       @rf_lxc_names     = %w(rfvmA rfvmB rfvmC rfvmD)

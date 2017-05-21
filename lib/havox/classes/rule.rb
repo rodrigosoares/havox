@@ -2,9 +2,8 @@ module Havox
   class Rule
     attr_reader :matches, :actions, :dp_id, :raw
 
-    FIELDS_DIC = Havox::OpenFlow10::Matches::FIELDS
-
-    def initialize(raw, force = false)
+    def initialize(raw, force = false, lang = :trema)
+      @lang = lang
       @matches = parsed_matches(raw, force)
       @actions = parsed_actions(raw)
       @dp_id = @matches[:dp_id].to_i
@@ -34,37 +33,33 @@ module Havox
       raw_matches = raw_matches.reject(&:empty?)                                # Rejects resulting empty match fields.
       raw_matches.each do |raw_match|                                           # Parses and adds each match based on the dictionary.
         stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='.
-        field = FIELDS_DIC[stmt.first]                                          # Gets the right field by the raw field name.
+        field = translate.fields_to(@lang)[stmt.first]                          # Gets the right field by the raw field name.
         ok_matches[field] = stmt.last unless already_set?(ok_matches, stmt, force)
       end
-      fields_treated(ok_matches)
+      translate.matches_to(@lang, ok_matches)
     end
 
     def parsed_actions(raw_rule)
-      actions_ok = []
+      ok_actions = []
       raw_actions = raw_rule.split('->').last.strip                             # Parses the actions in the 2nd part.
       raw_actions = raw_actions.split(/(?<=\))\s+(?=\w)/)                       # Splits the string into single raw actions.
       raw_actions.each do |raw_action|
         regex = /(?<action>\w+)\((?<arg_a>[\w<>]+)[,\s]*(?<arg_b>[\w<>]*)\)/    # Matches raw actions in the format 'Action(x, y)'.
-        actions_ok << hashed(raw_action.match(regex))                           # Adds the structured action to the returning array.
+        ok_actions << hashed(raw_action.match(regex))                           # Adds the structured action to the returning array.
       end
-      syntax_treated(actions_ok)
+      translate.actions_to(@lang, ok_actions)
     end
 
     def hashed(match_data)
       Hash[match_data.names.map(&:to_sym).zip(match_data.captures)]             # Converts the match data to a hash object.
     end
 
-    def fields_treated(matches_hash)
-      Havox::OpenFlow10::Matches.fields_treated(matches_hash)
-    end
-
-    def syntax_treated(actions_array)
-      Havox::OpenFlow10::Actions.syntax_treated(actions_array)
+    def translate
+      Havox::Translator.instance
     end
 
     def already_set?(matches_hash, stmt, force)
-      field = FIELDS_DIC[stmt.first]
+      field = translate.fields_to(@lang)[stmt.first]
       unless matches_hash[field].nil? || matches_hash[field].eql?(stmt.last)
         return ignore_conflict?(field, matches_hash[field], stmt.last, force)
       end

@@ -7,4 +7,6 @@ module Havox
   module Trema
     class UnpredictedAction < StandardError; end
   end
+
+  class UnknownTranslator < StandardError; end
 end
