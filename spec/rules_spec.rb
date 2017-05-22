@@ -28,7 +28,8 @@ describe Havox::Rule do
 
       it 'does not raise an error if forced by the user' do
         new_rule = nil
-        expect { new_rule = Havox::Rule.new(conflicting_raw_rule, true) }.not_to raise_error
+        options = { force: true }
+        expect { new_rule = Havox::Rule.new(conflicting_raw_rule, options) }.not_to raise_error
         expect(new_rule.matches[:ip_protocol]).to eq(17)
       end
     end

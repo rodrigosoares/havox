@@ -4,7 +4,7 @@ describe Havox::Translator do
   subject(:translate) { Havox::Translator.instance }
 
   describe '#fields_to' do
-    context 'call the fields dictionary' do
+    context 'calls the fields dictionary' do
       it 'for Trema' do
         expect(subject.fields_to(:trema)).to be_a(Hash)
       end

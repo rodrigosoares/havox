@@ -2,9 +2,9 @@ module Havox
   class Rule
     attr_reader :matches, :actions, :dp_id, :raw
 
-    def initialize(raw, force = false, lang = :trema)
-      @lang = lang
-      @matches = parsed_matches(raw, force)
+    def initialize(raw, opts = {})
+      @lang = opts[:lang] || :trema
+      @matches = parsed_matches(raw, opts[:force] || false)
       @actions = parsed_actions(raw)
       @dp_id = @matches[:dp_id].to_i
       @matches.delete(:dp_id)
