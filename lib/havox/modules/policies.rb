@@ -39,6 +39,12 @@ module Havox
       def basename(path)
         path.match(BASENAME_REGEX)[:name]
       end
+
+      def check_options(opts)
+        opts[:dst]   ||= "#{config.merlin_path}/examples/"                      # Sets the upload path in Merlin VM.
+        opts[:force] ||= false                                                  # Forces Havox to ignore field conflicts.
+        opts[:basic] ||= false                                                  # Instructs to append basic policies.
+      end
     end
 
     def self.run(command)
@@ -61,13 +67,13 @@ module Havox
       rules
     end
 
-    def self.compile!(topology_file, policy_file, force = false, dst = nil, basic = false)
-      dst ||= "#{config.merlin_path}/examples/"
-      policy_file = Havox::ModifiedPolicy.new(topology_file, policy_file).path if basic
-      if upload!(topology_file, dst) && upload!(policy_file, dst)
-        topology_file = "#{dst}#{basename(topology_file)}"
-        policy_file = "#{dst}#{basename(policy_file)}"
-        compile(topology_file, policy_file, force)
+    def self.compile!(topology_file, policy_file, opts = {})
+      check_options(opts)
+      policy_file = Havox::ModifiedPolicy.new(topology_file, policy_file).path if opts[:basic]
+      if upload!(topology_file, opts[:dst]) && upload!(policy_file, opts[:dst])
+        topology_file = "#{opts[:dst]}#{basename(topology_file)}"
+        policy_file = "#{opts[:dst]}#{basename(policy_file)}"
+        compile(topology_file, policy_file, opts[:force])
       end
     end
   end
