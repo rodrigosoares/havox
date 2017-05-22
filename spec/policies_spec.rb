@@ -44,7 +44,15 @@ describe Havox::Policies do
     let(:remote_policy_file)       { "#{merlin_path}/examples/file.mln"}
     let(:remote_dst_topology_file) { '/remote/path/to/file.dot' }
     let(:remote_dst_policy_file)   { '/remote/path/to/file.mln' }
-    let(:options)                  { Hash[force: false, basic: false, dst: "#{merlin_path}/examples/"] }
+
+    let :options do
+      Hash[
+        dst: "#{merlin_path}/examples/",
+        force: false,
+        basic: false,
+        syntax: :trema
+      ]
+    end
 
     before(:each) do
       allow(subject).to receive(:upload!).and_return(true)
