@@ -3,7 +3,7 @@ module Havox
     attr_reader :matches, :actions, :dp_id, :raw
 
     def initialize(raw, opts = {})
-      @lang = opts[:lang] || :trema
+      @syntax = opts[:syntax] || :trema
       @matches = parsed_matches(raw, opts[:force] || false)
       @actions = parsed_actions(raw)
       @dp_id = @matches[:dp_id].to_i
@@ -33,10 +33,10 @@ module Havox
       raw_matches = raw_matches.reject(&:empty?)                                # Rejects resulting empty match fields.
       raw_matches.each do |raw_match|                                           # Parses and adds each match based on the dictionary.
         stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='.
-        field = translate.fields_to(@lang)[stmt.first]                          # Gets the right field by the raw field name.
+        field = translate.fields_to(@syntax)[stmt.first]                        # Gets the right field by the raw field name.
         ok_matches[field] = stmt.last unless already_set?(ok_matches, stmt, force)
       end
-      translate.matches_to(@lang, ok_matches)
+      translate.matches_to(@syntax, ok_matches)
     end
 
     def parsed_actions(raw_rule)
@@ -47,7 +47,7 @@ module Havox
         regex = /(?<action>\w+)\((?<arg_a>[\w<>]+)[,\s]*(?<arg_b>[\w<>]*)\)/    # Matches raw actions in the format 'Action(x, y)'.
         ok_actions << hashed(raw_action.match(regex))                           # Adds the structured action to the returning array.
       end
-      translate.actions_to(@lang, ok_actions)
+      translate.actions_to(@syntax, ok_actions)
     end
 
     def hashed(match_data)
@@ -59,7 +59,7 @@ module Havox
     end
 
     def already_set?(matches_hash, stmt, force)
-      field = translate.fields_to(@lang)[stmt.first]
+      field = translate.fields_to(@syntax)[stmt.first]
       unless matches_hash[field].nil? || matches_hash[field].eql?(stmt.last)
         return ignore_conflict?(field, matches_hash[field], stmt.last, force)
       end
