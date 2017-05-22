@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Havox::OpenFlow10::Trema::Actions do
+describe Havox::OpenFlow10::OVS::Actions do
   let(:mln_output)              { Hash[action: 'Output', arg_a: '1', arg_b: ''] }
   let(:mln_enqueue)             { Hash[action: 'Enqueue', arg_a: '1', arg_b: '2'] }
   let(:mln_set_field_vlan_id)   { Hash[action: 'SetField', arg_a: 'vlan', arg_b: '2'] }

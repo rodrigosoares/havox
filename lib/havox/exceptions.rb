@@ -9,4 +9,5 @@ module Havox
   end
 
   class UnknownTranslator < StandardError; end
+  class UnknownAction < StandardError; end
 end
