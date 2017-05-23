@@ -41,9 +41,9 @@ module Havox
       end
 
       def check_options(opts)
-        opts[:dst]   ||= "#{config.merlin_path}/examples/"                      # Sets the upload path in Merlin VM.
-        opts[:force] ||= false                                                  # Forces Havox to ignore field conflicts.
-        opts[:basic] ||= false                                                  # Instructs to append basic policies.
+        opts[:dst]    ||= "#{config.merlin_path}/examples/"                     # Sets the upload path in Merlin VM.
+        opts[:force]  ||= false                                                 # Forces Havox to ignore field conflicts.
+        opts[:basic]  ||= false                                                 # Instructs to append basic policies.
         opts[:syntax] ||= :trema                                                # Sets the output syntax for generated rules.
       end
     end

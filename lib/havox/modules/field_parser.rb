@@ -22,7 +22,7 @@ module Havox
 
     def raise_unknown_action(obj)
       raise Havox::UnknownAction,
-        "Unable to translate action #{obj[:action]} with arguments A:"       \
+        "Unable to translate action #{obj[:action]} with arguments A:"         \
         " #{obj[:arg_a]} and B: #{obj[:arg_b]}, respectively"
     end
   end
