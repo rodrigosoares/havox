@@ -3,7 +3,7 @@ require 'helpers/mock_helper'
 
 RSpec.configure { |c| c.include MockHelper }
 
-describe Havox::Policies do
+describe Havox::Merlin do
   let(:rule)           { FactoryGirl.build :rule }
   let(:merlin_path)    { "#{Havox.configuration.merlin_path}" }
   let(:ssh_connection) { double('connection') }

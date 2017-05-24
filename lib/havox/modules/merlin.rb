@@ -1,5 +1,5 @@
 module Havox
-  module Policies
+  module Merlin
     class << self
       private
 
