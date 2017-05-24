@@ -59,4 +59,11 @@ describe Havox::Rule do
       expect(rule.inspect).to include(rule_id_str, dp_id_str)
     end
   end
+
+  describe '#to_h' do
+    it 'formats the rule into a hash' do
+      hash = { dp_id: rule.dp_id, matches: rule.matches, actions: rule.actions }
+      expect(rule.to_h).to eq(hash)
+    end
+  end
 end

@@ -24,6 +24,10 @@ module Havox
       "Rule #{object_id.to_s(16)}, dp_id = #{@dp_id}: #{to_s}"                  # Prints the rule when debugging or array listing.
     end
 
+    def to_h
+      { dp_id: @dp_id, matches: @matches, actions: @actions }
+    end
+
     private
 
     def parsed_matches(raw_rule, force)
