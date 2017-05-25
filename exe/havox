@@ -1,3 +1,4 @@
+require 'havox'
 require 'optparse'
 require 'ostruct'
 
@@ -53,7 +54,7 @@ end
 # Calls the rules generation and outputs the rules.
 def output_rules!(args)
   if can_generate_rules?(args)
-    # puts Havox::Policy.new(args.to_h).to_json
+    puts Havox::Policy.new(args.to_h).to_json
   end
 end
 
