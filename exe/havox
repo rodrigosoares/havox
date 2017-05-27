@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'havox'
 require 'optparse'
 require 'ostruct'
