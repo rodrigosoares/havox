@@ -20,11 +20,11 @@ class MainController < Trema::Controller
   end
 
   def switch_ready(dp_id)
+    install_rules(dp_id)
     @datapaths << dp_id
     @datapaths_off -= [dp_id]
     dp_name = "s#{dp_id}"
     logger.info "Datapath #{dp_name.bold} is #{'ONLINE'.bold.green}"
-    install_rules(dp_id)
   rescue => e
     handle_exception(e)
   end
