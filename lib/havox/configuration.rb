@@ -5,11 +5,11 @@ module Havox
       :protocol_daemons
 
     def initialize
-      @rf_host          = '192.168.56.102'
+      @rf_host          = '192.168.56.104'
       @rf_user          = 'routeflow'
       @rf_password      = 'routeflow'
       @rf_lxc_names     = %w(rfvmA rfvmB rfvmC rfvmD)
-      @merlin_host      = '192.168.56.101'
+      @merlin_host      = '192.168.56.102'
       @merlin_user      = 'frenetic'
       @merlin_password  = 'frenetic'
       @merlin_path      = '/home/frenetic/merlin'
