@@ -12,14 +12,6 @@ module Havox
       { action: action, arg_a: arg_a, arg_b: arg_b }
     end
 
-    def basic_action_from_set_field(obj)
-      if obj[:arg_a].eql?('vlan')
-        obj[:arg_b].eql?('<none>') ? basic_action(:strip_vlan) : basic_action(:set_vlan_vid, obj[:arg_b])
-      else
-        raise_unknown_action(obj)
-      end
-    end
-
     def raise_unknown_action(obj)
       raise Havox::UnknownAction,
         "Unable to translate action #{obj[:action]} with arguments A:"         \

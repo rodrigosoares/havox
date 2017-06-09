@@ -17,6 +17,16 @@ module Havox
           end
           of_actions
         end
+
+        private
+
+        def self.basic_action_from_set_field(obj)
+          if obj[:arg_a].eql?('vlan')
+            obj[:arg_b].eql?('<none>') ? basic_action(:strip_vlan) : basic_action(:mod_vlan_vid, obj[:arg_b])
+          else
+            raise_unknown_action(obj)
+          end
+        end
       end
     end
   end

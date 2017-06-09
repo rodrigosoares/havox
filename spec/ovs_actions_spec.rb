@@ -15,7 +15,7 @@ describe Havox::OpenFlow10::OVS::Actions do
       expect(of_actions).to include({ action: :output, arg_a: '1', arg_b: nil })
       expect(of_actions).to include({ action: :enqueue, arg_a: '1', arg_b: '2' })
       expect(of_actions).to include({ action: :strip_vlan, arg_a: nil, arg_b: nil })
-      expect(of_actions).to include({ action: :set_vlan_vid, arg_a: '2', arg_b: nil })
+      expect(of_actions).to include({ action: :mod_vlan_vid, arg_a: '2', arg_b: nil })
     end
 
     it 'raises an error if an unpredicted action is found' do
