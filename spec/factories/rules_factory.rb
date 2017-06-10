@@ -22,5 +22,26 @@ FactoryGirl.define do
         ipv4_dst '-1062731500'
       end
     end
+
+    trait :vlan_setting do
+      transient { actions  ['SetField(vlan, 10000)', 'Enqueue(1,1)'] }
+
+      raw do
+        "(switch = #{dp_id} and ipSrc = #{ipv4_src} and ipDst = #{ipv4_dst}) " \
+        "-> #{actions.join(' ')}"
+      end
+    end
+
+    trait :vlan_stripping do
+      transient { actions ['SetField(vlan, <none>)', 'Enqueue(1,1)'] }
+
+      raw { "(switch = #{dp_id} and vlanId = #{vlan_vid}) -> #{actions.join(' ')}" }
+    end
+
+    trait :vlan_forwarding do
+      transient { actions ['Enqueue(1,1)'] }
+
+      raw { "(switch = #{dp_id} and vlanId = #{vlan_vid}) -> #{actions.join(' ')}" }
+    end
   end
 end

@@ -44,6 +44,7 @@ module Havox
         opts[:dst]    ||= "#{config.merlin_path}/examples/"                     # Sets the upload path in Merlin VM.
         opts[:force]  ||= false                                                 # Forces Havox to ignore field conflicts.
         opts[:basic]  ||= false                                                 # Instructs to append basic policies.
+        opts[:expand] ||= false                                                 # Expands raw rules from VLAN-based to full predicates.
         opts[:syntax] ||= :trema                                                # Sets the output syntax for generated rules.
       end
     end
@@ -64,6 +65,7 @@ module Havox
       rules = []
       result = run(cmd.compile(topology_file, policy_file))                     # Runs Merlin in the remote VM and retrieves its output.
       result = parse(result)                                                    # Parses the output into raw rules.
+      result = Havox::RuleExpander.new(result).expanded_rules if opts[:expand]  # Expands each raw rule in the parsed result.
       result.each { |raw_rule| rules << Havox::Rule.new(raw_rule, opts) }       # Creates Rule instances for each raw rule.
       rules
     end

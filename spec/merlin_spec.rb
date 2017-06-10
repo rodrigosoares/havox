@@ -50,6 +50,7 @@ describe Havox::Merlin do
         dst: "#{merlin_path}/examples/",
         force: false,
         basic: false,
+        expand: false,
         syntax: :trema
       ]
     end
