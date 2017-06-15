@@ -65,6 +65,7 @@ module Havox
       rules = []
       result = run(cmd.compile(topology_file, policy_file))                     # Runs Merlin in the remote VM and retrieves its output.
       result = parse(result)                                                    # Parses the output into raw rules.
+      result = Havox::RuleSanitizer.new(result).sanitized_rules                 # Removes unwanted rule snippets.
       result = Havox::RuleExpander.new(result).expanded_rules if opts[:expand]  # Expands each raw rule in the parsed result.
       result.each { |raw_rule| rules << Havox::Rule.new(raw_rule, opts) }       # Creates Rule instances for each raw rule.
       rules
