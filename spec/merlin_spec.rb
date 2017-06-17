@@ -51,6 +51,7 @@ describe Havox::Merlin do
         force: false,
         basic: false,
         expand: false,
+        output: false,
         syntax: :trema
       ]
     end
