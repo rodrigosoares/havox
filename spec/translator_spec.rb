@@ -44,12 +44,12 @@ describe Havox::Translator do
 
     context 'calls the action array translation' do
       it 'for Trema' do
-        expect(Havox::OpenFlow10::Trema::Actions).to receive(:treat).with([mln_action])
+        expect(Havox::OpenFlow10::Trema::Actions).to receive(:treat).with([mln_action], {})
         subject.actions_to(:trema, [mln_action])
       end
 
       it 'for OpenVSwitch' do
-        expect(Havox::OpenFlow10::OVS::Actions).to receive(:treat).with([mln_action])
+        expect(Havox::OpenFlow10::OVS::Actions).to receive(:treat).with([mln_action], {})
         subject.actions_to(:ovs, [mln_action])
       end
     end

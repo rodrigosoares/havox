@@ -10,8 +10,8 @@ module Havox
       translation_module(syntax)::Matches.treat(matches_array)
     end
 
-    def actions_to(syntax, actions_array)
-      translation_module(syntax)::Actions.treat(actions_array)
+    def actions_to(syntax, actions_array, opts = {})
+      translation_module(syntax)::Actions.treat(actions_array, opts)
     end
 
     private

@@ -52,7 +52,7 @@ module Havox
         regex = /(?<action>\w+)\((?<arg_a>[\w<>]+)[,\s]*(?<arg_b>[\w<>]*)\)/    # Matches raw actions in the format 'Action(x, y)'.
         ok_actions << hashed(raw_action.match(regex))                           # Adds the structured action to the returning array.
       end
-      translate.actions_to(@syntax, ok_actions)
+      translate.actions_to(@syntax, ok_actions, @opts)
     end
 
     def hashed(match_data)
