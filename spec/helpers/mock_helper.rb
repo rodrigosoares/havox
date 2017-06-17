@@ -45,8 +45,7 @@ module MockHelper
   def openflow_rules(empty)
     unless empty
       "\n\nOn switch 1\t(((switch = 1\n  and (port = 0 and (((ipSrc = 1000000" \
-      "01 and ipDst = 100000002)) and *))))\nand vlanId = 10000) -> SetField(" \
-      "vlan, 1)\tEnqueue(1,1)"
+      "01 and ipDst = 100000002)) and *))))) -> SetField(vlan, 1)\tEnqueue(1,1)"
     end
   end
 end
