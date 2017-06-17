@@ -3,8 +3,9 @@ module Havox
     attr_reader :matches, :actions, :dp_id, :raw
 
     def initialize(raw, opts = {})
-      @syntax = opts[:syntax] || :trema
-      @matches = parsed_matches(raw, opts[:force] || false)
+      @opts = opts
+      @syntax = @opts[:syntax] || :trema
+      @matches = parsed_matches(raw)
       @actions = parsed_actions(raw)
       @dp_id = @matches[:dp_id].to_i
       @matches.delete(:dp_id)
@@ -30,7 +31,7 @@ module Havox
 
     private
 
-    def parsed_matches(raw_rule, force)
+    def parsed_matches(raw_rule)
       ok_matches = {}
       raw_matches = raw_rule.split('->').first.split('and')                     # Parses each match field in the 1st part.
       raw_matches = raw_matches.map { |str| str.tr('()*', '').strip }           # Removes unwanted characters.
@@ -38,7 +39,7 @@ module Havox
       raw_matches.each do |raw_match|                                           # Parses and adds each match based on the dictionary.
         stmt = raw_match.split(/\s?=\s?/)                                       # Splits the statement by '='.
         field = translate.fields_to(@syntax)[stmt.first]                        # Gets the right field by the raw field name.
-        ok_matches[field] = stmt.last unless already_set?(ok_matches, stmt, force)
+        ok_matches[field] = stmt.last unless already_set?(ok_matches, stmt)
       end
       translate.matches_to(@syntax, ok_matches)
     end
@@ -62,16 +63,16 @@ module Havox
       Havox::Translator.instance
     end
 
-    def already_set?(matches_hash, stmt, force)
+    def already_set?(matches_hash, stmt)
       field = translate.fields_to(@syntax)[stmt.first]
       unless matches_hash[field].nil? || matches_hash[field].eql?(stmt.last)
-        return ignore_conflict?(field, matches_hash[field], stmt.last, force)
+        return ignore_conflict?(field, matches_hash[field], stmt.last)
       end
       false
     end
 
-    def ignore_conflict?(field, old_value, new_value, force)
-      unless force
+    def ignore_conflict?(field, old_value, new_value)
+      unless @opts[:force]
         raise Havox::Merlin::FieldConflict,
           "Attempted to define field '#{field}' with #{new_value}, but it is " \
           "already defined with #{old_value}"
