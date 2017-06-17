@@ -45,6 +45,7 @@ module Havox
         opts[:force]  ||= false                                                 # Forces Havox to ignore field conflicts.
         opts[:basic]  ||= false                                                 # Instructs to append basic policies.
         opts[:expand] ||= false                                                 # Expands raw rules from VLAN-based to full predicates.
+        opts[:output] ||= false                                                 # Switches Enqueue action for Output action.
         opts[:syntax] ||= :trema                                                # Sets the output syntax for generated rules.
       end
     end
