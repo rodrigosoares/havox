@@ -12,30 +12,30 @@ module Havox
         extend Havox::FieldParser
 
         FIELDS = {
-          'ethSrc'     => :rfmt_ethernet_src, # Inferred.
-          'ethDst'     => :rfmt_ethernet,
-          'ethTyp'     => :rfmt_ethertype,
-          'ipSrc'      => :rfmt_ipv4_src,     # Inferred.
-          'ipDst'      => :rfmt_ipv4,
-          'ipProto'    => :rfmt_nw_proto,
-          'nwProto'    => :rfmt_nw_proto,
-          'port'       => :rfmt_in_port,      # Inferred.
+          'ethSrc'     => :ethernet_src, # Inferred.
+          'ethDst'     => :ethernet,
+          'ethTyp'     => :ethertype,
+          'ipSrc'      => :ipv4_src,     # Inferred.
+          'ipDst'      => :ipv4,
+          'ipProto'    => :nw_proto,
+          'nwProto'    => :nw_proto,
+          'port'       => :in_port,      # Inferred.
           'switch'     => :dp_id,
-          'tcpSrcPort' => :rfmt_tp_src,
-          'tcpDstPort' => :rfmt_tp_dst,
-          'vlanId'     => :rfmt_vlan_id,      # Inferred (vandervecken).
-          'vlanPcp'    => :rfmt_vlan_pcp      # Inferred.
+          'tcpSrcPort' => :tp_src,
+          'tcpDstPort' => :tp_dst,
+          'vlanId'     => :vlan_id,      # Inferred (vandervecken).
+          'vlanPcp'    => :vlan_pcp      # Inferred.
         }
 
         def self.treat(hash)
-          hash[:rfmt_ethertype] = hash[:rfmt_ethertype].to_i unless hash[:rfmt_ethertype].nil?
-          hash[:rfmt_ipv4_src]  = parsed_ipv4(hash[:rfmt_ipv4_src]) unless hash[:rfmt_ipv4_src].nil?
-          hash[:rfmt_ipv4]      = parsed_ipv4(hash[:rfmt_ipv4]) unless hash[:rfmt_ipv4].nil?
-          hash[:rfmt_nw_proto]  = hash[:rfmt_nw_proto].to_i unless hash[:rfmt_nw_proto].nil?
-          hash[:rfmt_in_port]   = hash[:rfmt_in_port].to_i unless hash[:rfmt_in_port].nil?
-          hash[:rfmt_tp_src]    = hash[:rfmt_tp_src].to_i unless hash[:rfmt_tp_src].nil?
-          hash[:rfmt_tp_dst]    = hash[:rfmt_tp_dst].to_i unless hash[:rfmt_tp_dst].nil?
-          hash[:rfmt_vlan_id]   = hash[:rfmt_vlan_id].to_i unless hash[:rfmt_vlan_id].nil?
+          hash[:ethertype] = hash[:ethertype].to_i unless hash[:ethertype].nil?
+          hash[:ipv4_src]  = parsed_ipv4(hash[:ipv4_src]) unless hash[:ipv4_src].nil?
+          hash[:ipv4]      = parsed_ipv4(hash[:ipv4]) unless hash[:ipv4].nil?
+          hash[:nw_proto]  = hash[:nw_proto].to_i unless hash[:nw_proto].nil?
+          hash[:in_port]   = hash[:in_port].to_i unless hash[:in_port].nil?
+          hash[:tp_src]    = hash[:tp_src].to_i unless hash[:tp_src].nil?
+          hash[:tp_dst]    = hash[:tp_dst].to_i unless hash[:tp_dst].nil?
+          hash[:vlan_id]   = hash[:vlan_id].to_i unless hash[:vlan_id].nil?
           hash
         end
       end
