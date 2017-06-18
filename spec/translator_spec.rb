@@ -12,6 +12,10 @@ describe Havox::Translator do
       it 'for OpenVSwitch' do
         expect(subject.fields_to(:ovs)).to be_a(Hash)
       end
+
+      it 'for RouteFlow' do
+        expect(subject.fields_to(:routeflow)).to be_a(Hash)
+      end
     end
 
     it 'raises an error if the given translator is unknown' do
@@ -20,22 +24,27 @@ describe Havox::Translator do
   end
 
   describe '#matches_to' do
-    let(:trema_hash) { Hash[ip_protocol: '6'] }
+    let(:match_hash) { Hash[ip_protocol: '6'] }
 
     context 'calls the matches hash translation' do
       it 'for Trema' do
-        expect(Havox::OpenFlow10::Trema::Matches).to receive(:treat).with(trema_hash)
-        subject.matches_to(:trema, trema_hash)
+        expect(Havox::OpenFlow10::Trema::Matches).to receive(:treat).with(match_hash)
+        subject.matches_to(:trema, match_hash)
       end
 
       it 'for OpenVSwitch' do
-        expect(Havox::OpenFlow10::OVS::Matches).to receive(:treat).with(trema_hash)
-        subject.matches_to(:ovs, trema_hash)
+        expect(Havox::OpenFlow10::OVS::Matches).to receive(:treat).with(match_hash)
+        subject.matches_to(:ovs, match_hash)
+      end
+
+      it 'for RouteFlow' do
+        expect(Havox::OpenFlow10::RouteFlow::Matches).to receive(:treat).with(match_hash)
+        subject.matches_to(:routeflow, match_hash)
       end
     end
 
     it 'raises an error if the given translator is unknown' do
-      expect { subject.matches_to(:foo, trema_hash) }.to raise_error(Havox::UnknownTranslator)
+      expect { subject.matches_to(:foo, match_hash) }.to raise_error(Havox::UnknownTranslator)
     end
   end
 
@@ -51,6 +60,11 @@ describe Havox::Translator do
       it 'for OpenVSwitch' do
         expect(Havox::OpenFlow10::OVS::Actions).to receive(:treat).with([mln_action], {})
         subject.actions_to(:ovs, [mln_action])
+      end
+
+      it 'for RouteFlow' do
+        expect(Havox::OpenFlow10::RouteFlow::Actions).to receive(:treat).with([mln_action], {})
+        subject.actions_to(:routeflow, [mln_action])
       end
     end
 

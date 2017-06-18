@@ -1,5 +1,10 @@
 module Havox
   class Translator
+    # OPTIMIZE: Refactor the translation schema to be scalable.
+    # Current way of selecting the syntax via multiple match and action files
+    # is not DRY. Refactor the translation schema to be scalable, maybe using
+    # YAML or some other better structure.
+
     include Singleton
 
     def fields_to(syntax)
@@ -18,8 +23,9 @@ module Havox
 
     def translation_module(syntax)
       case syntax
-      when :trema then Havox::OpenFlow10::Trema
-      when :ovs   then Havox::OpenFlow10::OVS
+      when :ovs       then Havox::OpenFlow10::OVS
+      when :routeflow then Havox::OpenFlow10::RouteFlow
+      when :trema     then Havox::OpenFlow10::Trema
       else raise_unknown_translator(syntax)
       end
     end
