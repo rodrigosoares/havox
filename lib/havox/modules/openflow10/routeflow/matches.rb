@@ -28,8 +28,14 @@ module Havox
         }
 
         def self.treat(hash)
-          hash[:rfmt_ipv4_src] = parsed_ipv4(hash[:rfmt_ipv4_src]) unless hash[:rfmt_ipv4_src].nil?
-          hash[:rfmt_ipv4] = parsed_ipv4(hash[:rfmt_ipv4]) unless hash[:rfmt_ipv4].nil?
+          hash[:rfmt_ethertype] = hash[:rfmt_ethertype].to_i unless hash[:rfmt_ethertype].nil?
+          hash[:rfmt_ipv4_src]  = parsed_ipv4(hash[:rfmt_ipv4_src]) unless hash[:rfmt_ipv4_src].nil?
+          hash[:rfmt_ipv4]      = parsed_ipv4(hash[:rfmt_ipv4]) unless hash[:rfmt_ipv4].nil?
+          hash[:rfmt_nw_proto]  = hash[:rfmt_nw_proto].to_i unless hash[:rfmt_nw_proto].nil?
+          hash[:rfmt_in_port]   = hash[:rfmt_in_port].to_i unless hash[:rfmt_in_port].nil?
+          hash[:rfmt_tp_src]    = hash[:rfmt_tp_src].to_i unless hash[:rfmt_tp_src].nil?
+          hash[:rfmt_tp_dst]    = hash[:rfmt_tp_dst].to_i unless hash[:rfmt_tp_dst].nil?
+          hash[:rfmt_vlan_id]   = hash[:rfmt_vlan_id].to_i unless hash[:rfmt_vlan_id].nil?
           hash
         end
       end
