@@ -64,10 +64,10 @@ class MainController < Trema::Controller
     actions_array.each do |obj|
       methods <<
         case obj[:action]
-        when :output       then Pio::OpenFlow10::SendOutPort.new(obj[:arg_a].to_i)
-        when :enqueue      then Pio::OpenFlow10::Enqueue.new(obj[:arg_a].to_i, obj[:arg_b].to_i)
+        when :output       then Pio::OpenFlow10::SendOutPort.new(obj[:arg_a])
+        when :enqueue      then Pio::OpenFlow10::Enqueue.new(obj[:arg_a], obj[:arg_b])
         when :strip_vlan   then Pio::OpenFlow10::StripVlanHeader.new
-        when :set_vlan_vid then Pio::OpenFlow10::SetVlanVid.new(obj[:arg_a].to_i)
+        when :set_vlan_vid then Pio::OpenFlow10::SetVlanVid.new(obj[:arg_a])
         else raise Havox::Trema::UnpredictedAction,
           "No method associated with action '#{obj[:action]}'"
         end

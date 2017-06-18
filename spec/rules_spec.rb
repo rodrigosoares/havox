@@ -7,8 +7,8 @@ describe Havox::Rule do
   let(:rule) { FactoryGirl.build :rule }
 
   describe '.new' do
-    let(:action_a) { Hash[action: :enqueue, arg_a: '0', arg_b: '2'] }
-    let(:action_b) { Hash[action: :output, arg_a: '0', arg_b: nil] }
+    let(:action_a) { Hash[action: :enqueue, arg_a: 0, arg_b: 2] }
+    let(:action_b) { Hash[action: :output, arg_a: 0, arg_b: nil] }
 
     it 'parses a Merlin formatted OpenFlow rule' do
       new_rule = Havox::Rule.new(raw_rule)

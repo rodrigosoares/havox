@@ -9,7 +9,7 @@ module Havox
           actions_array.each do |obj|
             of_actions <<
               case obj[:action]
-              when 'Output' then basic_action(:output, obj[:arg_a])
+              when 'Output' then basic_action(:output, obj[:arg_a].to_i)
               when 'Enqueue' then output_or_enqueue(obj, opts[:output])
               when 'SetField' then basic_action_from_set_field(obj)
               else raise_unknown_action(obj)
@@ -22,7 +22,11 @@ module Havox
 
         def self.basic_action_from_set_field(obj)
           if obj[:arg_a].eql?('vlan')
-            obj[:arg_b].eql?('<none>') ? basic_action(:strip_vlan) : basic_action(:set_vlan_vid, obj[:arg_b])
+            if obj[:arg_b].eql?('<none>')
+              basic_action(:strip_vlan)
+            else
+              basic_action(:set_vlan_vid, obj[:arg_b].to_i)
+            end
           else
             raise_unknown_action(obj)
           end
@@ -30,9 +34,9 @@ module Havox
 
         def self.output_or_enqueue(obj, change_to_output)
           if change_to_output
-            basic_action(:output, obj[:arg_a])
+            basic_action(:output, obj[:arg_a].to_i)
           else
-            basic_action(:enqueue, obj[:arg_a], obj[:arg_b])
+            basic_action(:enqueue, obj[:arg_a].to_i, obj[:arg_b].to_i)
           end
         end
       end
