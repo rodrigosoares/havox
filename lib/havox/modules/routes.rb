@@ -1,7 +1,14 @@
 module Havox
   module Routes
     class << self
-      ENTRY_REGEX = /^\w.*\s((?:[0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2}).*$/
+      ENTRY_REGEX = %r(^
+        [O>\*\s]{3}
+        \s*(?<network>([0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2})?
+        \s(\[\d*\/\d*\])?
+        \s(via\s(?<via>([0-9]{1,3}\.){3}[0-9]{1,3})|is.*),
+        \s(?<interface>\w*),
+        .*$
+      )x
 
       private
 
@@ -19,8 +26,8 @@ module Havox
         end
       end
 
-      def parse(table_str)
-        table_str.scan(ENTRY_REGEX).flatten
+      def parse(output)
+        output.each_line.map { |l| l.match(ENTRY_REGEX) }.compact
       end
     end
 
