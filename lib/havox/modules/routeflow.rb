@@ -1,5 +1,5 @@
 module Havox
-  module Routes
+  module RouteFlow
     class << self
       ENTRY_REGEX = %r(^
         [O>\*\s]{3}

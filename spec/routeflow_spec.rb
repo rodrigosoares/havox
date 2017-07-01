@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe Havox::Routes do
+describe Havox::RouteFlow do
   describe '.fetch' do
-    it 'returns the parsed RIB of a specific VM' do
+    it 'returns the parsed RIB of a specific container' do
       pending 'Write this test'
       expect(true).to be false
     end
   end
 
   describe '.fetch_all' do
-    it 'returns a set of parsed RIBs from all VMs' do
+    it 'returns a set of parsed RIBs from all containers' do
       pending 'Write this test'
       expect(true).to be false
     end
