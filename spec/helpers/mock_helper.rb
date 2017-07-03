@@ -40,6 +40,20 @@ module MockHelper
     " at min(100 Mbps);\n"
   end
 
+  def container_ospf_routes_response
+    "Codes: K - kernel route, C - connected, S - static, R - RIP, O - OSPF,\n" \
+    "       I - ISIS, B - BGP, > - selected route, * - FIB route\n\nO>* 10.0." \
+    "0.0/24 [110/20] via 40.0.0.2, eth2, 03:41:18\n  *                      v" \
+    "ia 50.0.0.1, eth4, 03:41:18\nO   20.0.0.0/24 [110/10] is directly connec" \
+    "ted, eth3, 03:41:39\nO>* 30.0.0.0/24 [110/20] via 20.0.0.3, eth3, 03:41:" \
+    "18\n  *                      via 50.0.0.1, eth4, 03:41:18\nO   40.0.0.0/" \
+    "24 [110/10] is directly connected, eth2, 03:41:39\nO   50.0.0.0/24 [110/" \
+    "10] is directly connected, eth4, 03:41:39\nO>* 172.31.1.0/24 [110/20] vi" \
+    "a 50.0.0.1, eth4, 03:41:18\nO>* 172.31.2.0/24 [110/20] via 40.0.0.2, eth" \
+    "2, 03:41:26\nO>* 172.31.3.0/24 [110/20] via 20.0.0.3, eth3, 03:41:26\nO " \
+    "  172.31.4.0/24 [110/10] is directly connected, eth1, 03:41:39\n"
+  end
+
   private
 
   def openflow_rules(empty)

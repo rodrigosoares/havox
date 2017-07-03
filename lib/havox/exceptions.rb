@@ -4,6 +4,10 @@ module Havox
     class ParsingError < StandardError; end
   end
 
+  module RouteFlow
+    class UnknownProtocol < StandardError; end
+  end
+
   module Trema
     class UnpredictedAction < StandardError; end
   end

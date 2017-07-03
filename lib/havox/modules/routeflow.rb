@@ -1,14 +1,8 @@
 module Havox
   module RouteFlow
     class << self
-      ENTRY_REGEX = %r(^
-        [O>\*\s]{3}
-        \s*(?<network>([0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2})?
-        \s(\[\d*\/\d*\])?
-        \s(via\s(?<via>([0-9]{1,3}\.){3}[0-9]{1,3})|is.*),
-        \s(?<interface>\w*),
-        .*$
-      )x
+      ENTRY_REGEX = /[(O|K|C|S|R|I|B)>\*\s]{3}.*(via|is).*,.*$/
+      PROTOCOLS = [:ospf]
 
       private
 
@@ -31,19 +25,20 @@ module Havox
       end
     end
 
-    def self.fetch(vm_name, protocol = :bgp)
-      ssh_connection do |ssh|
-        output = ssh.exec!(cmd.show_ip_route(vm_name, protocol))
-        parse(output)
-      end
+    def self.fetch(vm_name, protocol)
+      output = nil
+      ssh_connection { |ssh| output = ssh.exec!(cmd.show_ip_route(vm_name, protocol)) }
+      result = parse(output)
+      result.map(&:to_s)
     end
 
-    def self.fetch_all(protocol = :bgp)
+    def self.ribs
       routes = {}
-      ssh_connection do |ssh|
-        config.rf_lxc_names.each do |vm_name|
-          output = ssh.exec!(cmd.show_ip_route(vm_name, protocol))
-          routes[vm_name] = parse(output)
+      config.rf_lxc_names.each do |vm_name|
+        routes[vm_name] = []
+        PROTOCOLS.each do |protocol|
+          raw_entries = fetch(vm_name, protocol)
+          routes[vm_name] += raw_entries.map { |re| Havox::Route.new(re, protocol) }
         end
       end
       routes
