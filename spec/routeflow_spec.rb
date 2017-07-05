@@ -4,6 +4,7 @@ require 'helpers/mock_helper'
 RSpec.configure { |c| c.include MockHelper }
 
 describe Havox::RouteFlow do
+  let(:route)          { FactoryGirl.build :route }
   let(:raw_route)      { 'O>* 10.0.0.0/24 [110/20] via 40.0.0.2, eth2, 03:41:18' }
   let(:ssh_connection) { double('connection') }
 
@@ -11,27 +12,21 @@ describe Havox::RouteFlow do
     it 'returns the parsed RIB of a specific RouteFlow container' do
       allow(Net::SSH).to receive(:start).and_yield(ssh_connection)
       allow(ssh_connection).to receive(:exec!).and_return(container_ospf_routes_response)
-      expect(subject.fetch('foo_vm', :ospf).size).to be(11)
-      expect(subject.fetch('foo_vm', :ospf)).to include(raw_route)
+      raw_routes = subject.fetch('foo_vm', :ospf)
+      expect(raw_routes.size).to be(11)
+      expect(raw_routes).to include(raw_route)
     end
   end
 
   describe '.ribs' do
     it 'returns a hash of RouteFlow containers with their parsed routes' do
-      pending 'Write this test'
-      expect(true).to be false
+      allow(subject).to receive(:fetch).with('foo_vm', anything).and_return([raw_route])
+      allow(subject).to receive(:fetch).with('bar_vm', anything).and_return([])
+      routes = subject.ribs(['foo_vm', 'bar_vm'])
+      expect(routes['foo_vm'].map(&:network)).to include(route.network)
+      expect(routes['foo_vm'].map(&:via)).to include(route.via)
+      expect(routes['foo_vm'].map(&:interface)).to include(route.interface)
+      expect(routes['bar_vm']).to be_empty
     end
   end
-
-  # describe '.toggle_services' do
-  #   it 'activates all the services listed in the configuration file' do
-  #     pending 'Write this test'
-  #     expect(true).to be false
-  #   end
-  #
-  #   it 'deactivates all the services listed in the configuration file' do
-  #     pending 'Write this test'
-  #     expect(true).to be false
-  #   end
-  # end
 end
