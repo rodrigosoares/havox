@@ -8,7 +8,7 @@ FactoryGirl.define do
 
       raw { "O>* #{network} [110/20] via #{via}, #{interface}, 03:41:18" }
 
-      initialize_with { new(raw, protocol) }
+      initialize_with { new(raw) }
     end
   end
 end

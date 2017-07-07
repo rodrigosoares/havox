@@ -20,12 +20,14 @@ describe Havox::RouteFlow do
 
   describe '.ribs' do
     it 'returns a hash of RouteFlow containers with their parsed routes' do
-      allow(subject).to receive(:fetch).with('foo_vm', anything).and_return([raw_route])
-      allow(subject).to receive(:fetch).with('bar_vm', anything).and_return([])
+      allow(subject).to receive(:fetch).with('foo_vm').and_return([raw_route])
+      allow(subject).to receive(:fetch).with('bar_vm').and_return([])
       routes = subject.ribs(['foo_vm', 'bar_vm'])
+      expect(routes['foo_vm'].map(&:protocol)).to include(route.protocol)
       expect(routes['foo_vm'].map(&:network)).to include(route.network)
       expect(routes['foo_vm'].map(&:via)).to include(route.via)
       expect(routes['foo_vm'].map(&:interface)).to include(route.interface)
+      expect(routes['foo_vm'].map(&:timestamp)).to include(route.timestamp)
       expect(routes['bar_vm']).to be_empty
     end
   end

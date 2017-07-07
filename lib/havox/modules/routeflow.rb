@@ -1,7 +1,7 @@
 module Havox
   module RouteFlow
     class << self
-      ENTRY_REGEX = /[(O|K|C|S|R|I|B)>\*\s]{3}.*(via|is).*,.*$/
+      ENTRY_REGEX = /[OKCSRIBA>\*\s]{3}.*(via|is).*,.*$/
 
       private
 
@@ -23,27 +23,25 @@ module Havox
         output.each_line.map { |l| l.match(ENTRY_REGEX) }.compact
       end
 
-      def check_options(opts)
-        opts[:protocols] ||= [:ospf]                                            # Specifies the set of protocols to be evaluated.
-      end
+      # def check_options(opts)
+      #   #code
+      # end
     end
 
-    def self.fetch(vm_name, protocol)
+    def self.fetch(vm_name, protocol = nil)
       output = nil
       ssh_connection { |ssh| output = ssh.exec!(cmd.show_ip_route(vm_name, protocol)) }
       result = parse(output)
       result.map(&:to_s)
     end
 
-    def self.ribs(vm_names = config.rf_lxc_names, opts = {})
-      check_options(opts)
+    def self.ribs(vm_names, opts = {})
+      # check_options(opts)
       routes = {}
       vm_names.each do |vm_name|
         routes[vm_name] = []
-        opts[:protocols].each do |protocol|
-          raw_entries = fetch(vm_name, protocol)
-          routes[vm_name] += raw_entries.map { |re| Havox::Route.new(re, protocol, opts) }
-        end
+        raw_entries = fetch(vm_name)
+        routes[vm_name] += raw_entries.map { |re| Havox::Route.new(re, opts) }
       end
       routes
     end
