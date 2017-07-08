@@ -42,7 +42,6 @@ module Havox
     private
 
     def parse_raw_entry
-      puts @raw
       parsed_entry = @raw.match(ROUTE_REGEX)
       evaluate_protocol(parsed_entry[:flags])
       evaluate_route_attributes(parsed_entry)
