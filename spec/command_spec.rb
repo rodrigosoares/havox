@@ -9,6 +9,14 @@ describe Havox::Command do
     end
   end
 
+  describe '.vtysh_run' do
+    it 'builds an arbitrary user command to be sent to the VMs' do
+      returned_cmd = subject.vtysh_run('foo_vm', 'ip route')
+      expected_cmd = "sudo lxc-attach -n foo_vm -- /usr/bin/vtysh -c 'ip route'"
+      expect(returned_cmd).to eq(expected_cmd)
+    end
+  end
+
   describe '.toggle_daemon' do
     it 'builds a remote daemon activating command' do
       returned_cmd = subject.toggle_daemon('foo_vm', :bgpd)

@@ -2,7 +2,11 @@ module Havox
   module Command
     class << self
       def show_ip_route(vm_name, protocol)
-        rf_command(vm_name, "/usr/bin/vtysh -c 'show ip route #{protocol}'")
+        vtysh_run(vm_name, "show ip route #{protocol}")
+      end
+
+      def vtysh_run(vm_name, command)
+        rf_command(vm_name, "/usr/bin/vtysh -c '#{command}'")
       end
 
       def toggle_daemon(vm_name, daemon, activate = true)

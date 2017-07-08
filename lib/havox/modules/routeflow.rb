@@ -28,9 +28,14 @@ module Havox
       # end
     end
 
-    def self.fetch(vm_name, protocol = nil)
+    def self.run(command)
       output = nil
-      ssh_connection { |ssh| output = ssh.exec!(cmd.show_ip_route(vm_name, protocol)) }
+      ssh_connection { |ssh| output = ssh.exec!(command) }
+      output
+    end
+
+    def self.fetch(vm_name, protocol = nil)
+      output = run(cmd.show_ip_route(vm_name, protocol))
       result = parse(output)
       result.map(&:to_s)
     end
