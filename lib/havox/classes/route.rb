@@ -4,8 +4,8 @@ module Havox
       :timestamp
 
     ROUTE_REGEX = %r(^
-      (?<flags>[OKCSRIBA>\*\s]{3})\s
-      *(?<network>([0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2})?\s
+      (?<flags>[A-Z>\*\s]{3})\s*
+      (?<network>([0-9]{1,3}\.){3}[0-9]{1,3}\/[0-9]{1,2})?\s
       (\[\d*\/\d*\])?\s?
       (via\s(?<via>([0-9]{1,3}\.){3}[0-9]{1,3})|is\sdirectly\sconnected),\s
       (?<interface>\w+)

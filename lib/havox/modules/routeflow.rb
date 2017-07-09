@@ -1,7 +1,7 @@
 module Havox
   module RouteFlow
     class << self
-      ENTRY_REGEX = /[OKCSRIBA>\*\s]{3}.*(via|is).*,.*$/
+      ENTRY_REGEX = /[A-Z>\*\s]{3}.*(via|is).*,.*$/
 
       private
 
@@ -20,12 +20,9 @@ module Havox
       end
 
       def parse(output)
-        output.each_line.map { |l| l.match(ENTRY_REGEX) }.compact
+        result = output.each_line.map { |l| l.match(ENTRY_REGEX) }.compact
+        result.map(&:to_s)
       end
-
-      # def check_options(opts)
-      #   #code
-      # end
     end
 
     def self.run(command)
@@ -35,13 +32,13 @@ module Havox
     end
 
     def self.fetch(vm_name, protocol = nil)
-      output = run(cmd.show_ip_route(vm_name, protocol))
-      result = parse(output)
-      result.map(&:to_s)
+      result = run(cmd.show_ip_route(vm_name, protocol))
+      result = parse(result)
+      result = Havox::RouteFiller.new(result).filled_routes
+      result
     end
 
     def self.ribs(vm_names, opts = {})
-      # check_options(opts)
       routes = {}
       vm_names.each do |vm_name|
         routes[vm_name] = []
