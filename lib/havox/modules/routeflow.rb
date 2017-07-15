@@ -39,11 +39,10 @@ module Havox
     end
 
     def self.ribs(vm_names, opts = {})
-      routes = {}
+      routes = []
       vm_names.each do |vm_name|
-        routes[vm_name] = []
-        raw_entries = fetch(vm_name)
-        routes[vm_name] += raw_entries.map { |re| Havox::Route.new(re, opts) }
+        raw_routes = fetch(vm_name)
+        routes += raw_routes.map { |rr| Havox::Route.new(rr, vm_name, opts) }
       end
       routes
     end

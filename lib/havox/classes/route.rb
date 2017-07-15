@@ -1,7 +1,7 @@
 module Havox
   class Route
     attr_reader :network, :via, :interface, :protocol, :best, :fib, :raw,
-      :timestamp
+      :timestamp, :router
 
     ROUTE_REGEX = %r(^
       (?<flags>[A-Z>\*\s]{3})\s*
@@ -18,7 +18,8 @@ module Havox
       'R' => :rip, 'I' => :isis, 'A' => :babel, 'K' => :kernel
     }
 
-    def initialize(raw, opts = {})
+    def initialize(raw, router, opts = {})
+      @router = router
       @opts = opts
       @raw = raw
       parse_raw_entry
@@ -31,11 +32,11 @@ module Havox
     end
 
     def inspect
-      "Route #{object_id.to_s(16)}, #{to_s}"
+      "Route #{object_id.to_s(16)}, router #{@router}, #{to_s}"
     end
 
     def to_h
-      { protocol: @protocol, network: @network, via: @via,
+      { router: @router, protocol: @protocol, network: @network, via: @via,
         interface: @interface, timestamp: @timestamp, best: @best, fib: @fib }
     end
 
@@ -53,10 +54,10 @@ module Havox
     end
 
     def evaluate_route_attributes(parsed_entry)
-      @network   = parsed_entry[:network]
-      @via       = parsed_entry[:via]
-      @interface = parsed_entry[:interface]
-      @timestamp = parsed_entry[:timestamp]
+      @network   = parsed_entry[:network]&.to_s
+      @via       = parsed_entry[:via]&.to_s
+      @interface = parsed_entry[:interface]&.to_s
+      @timestamp = parsed_entry[:timestamp]&.to_s
       @best      = parsed_entry[:flags].include?('>')
       @fib       = parsed_entry[:flags].include?('*')
     end

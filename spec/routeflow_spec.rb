@@ -19,16 +19,18 @@ describe Havox::RouteFlow do
   end
 
   describe '.ribs' do
-    it 'returns a hash of RouteFlow containers with their parsed routes' do
+    it 'returns an array of parsed RouteFlow routes' do
       allow(subject).to receive(:fetch).with('foo_vm').and_return([raw_route])
       allow(subject).to receive(:fetch).with('bar_vm').and_return([])
       routes = subject.ribs(['foo_vm', 'bar_vm'])
-      expect(routes['foo_vm'].map(&:protocol)).to include(route.protocol)
-      expect(routes['foo_vm'].map(&:network)).to include(route.network)
-      expect(routes['foo_vm'].map(&:via)).to include(route.via)
-      expect(routes['foo_vm'].map(&:interface)).to include(route.interface)
-      expect(routes['foo_vm'].map(&:timestamp)).to include(route.timestamp)
-      expect(routes['bar_vm']).to be_empty
+      foo_vm_routes = routes.select { |route| route.router.eql?('foo_vm') }
+      bar_vm_routes = routes.select { |route| route.router.eql?('bar_vm') }
+      expect(foo_vm_routes.map(&:protocol)).to include(route.protocol)
+      expect(foo_vm_routes.map(&:network)).to include(route.network)
+      expect(foo_vm_routes.map(&:via)).to include(route.via)
+      expect(foo_vm_routes.map(&:interface)).to include(route.interface)
+      expect(foo_vm_routes.map(&:timestamp)).to include(route.timestamp)
+      expect(bar_vm_routes).to be_empty
     end
   end
 end
