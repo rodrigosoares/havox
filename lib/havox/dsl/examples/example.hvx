@@ -1,0 +1,9 @@
+Havox::Network.define do
+  balance { dst_port 80 }
+  drop    { dst_port 25 }
+
+  balance do
+    dst_port 80
+    dst_ip   '172.31.4.100'
+  end
+end
