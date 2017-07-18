@@ -7,8 +7,8 @@ module Havox
     end
 
     def self.define(&block)
-      definition_proxy = Havox::SnippetProxy.new
-      definition_proxy.instance_eval(&block)
+      snippet_proxy = Havox::DSL::SnippetProxy.new
+      snippet_proxy.instance_eval(&block)
     end
   end
 end
