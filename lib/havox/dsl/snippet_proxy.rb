@@ -12,9 +12,9 @@ module Havox
       private
 
       def eval_snippet(action, &block)
-        snippet_meta = Havox::DSL::SnippetMetadata.new(action)
-        snippet_meta.instance_eval(&block)
-        Havox::Network.snippets << snippet_meta
+        snippet = Havox::DSL::Snippet.new(action)
+        snippet.instance_eval(&block)
+        Havox::Network.snippets << snippet
       end
     end
   end

@@ -14,7 +14,6 @@ module Havox
     ARP_POLICY  = 'ethTyp = 2054 -> .* at min(100 Mbps);'
     ICMP_POLICY = 'ethTyp = 2048 and ipProto = 1 -> .* at min(100 Mbps);'
     POLICIES    = [ICMP_POLICY, ARP_POLICY]
-    HOSTS_REGEX = /(?<host>\w+)\s*\[.*type\s*=\s*host.*\];/i
 
     def append_basic_policies
       policy_file_string = File.read(@original_policy_file_path)
@@ -27,12 +26,8 @@ module Havox
     end
 
     def parsed_hosts
-      hosts = []
-      File.read(@topology_file_path).each_line do |l|
-        match_data = l.match(HOSTS_REGEX)
-        hosts << match_data[:host] unless match_data.nil?
-      end
-      hosts
+      dot_parser = Havox::DotParser.new(@topology_file_path)
+      dot_parser.host_names
     end
 
     def basic_policies(hosts_array)

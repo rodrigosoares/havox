@@ -1,6 +1,6 @@
 module Havox
   module DSL
-    class SnippetMetadata
+    class Snippet
       attr_reader :attributes
 
       def initialize(action)
