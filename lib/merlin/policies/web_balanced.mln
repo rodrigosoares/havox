@@ -1,0 +1,7 @@
+foreach (s, d): cross({ h1; h3; h4 }, { h1; h2; h3; h4 })
+  ethTyp = 2048 and ipProto = 6 and tcpDstPort = 80 -> .* s5 at min(100 Mbps);
+
+(*
+foreach (s, d): cross({ h1; h2; h3; h4 }, { h1; h2; h3; h4 })
+  ethTyp = 2048 and ipProto = 6 -> .* s8 at min(100 Mbps);
+*)

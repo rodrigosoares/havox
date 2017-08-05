@@ -40,6 +40,14 @@ module Havox
         interface: @interface, timestamp: @timestamp, best: @best, fib: @fib }
     end
 
+    def bgp?
+      @protocol.eql?(:bgp)
+    end
+
+    def ospf?
+      @protocol.eql?(:ospf)
+    end
+
     private
 
     def parse_raw_entry

@@ -1,0 +1,2 @@
+foreach (s, d): cross({ h1; h2; h3; h4 }, { h1; h2; h3; h4 })
+  tcpDstPort = 80 -> .* s6 .* at min(1 Mbps);
