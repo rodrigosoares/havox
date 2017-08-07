@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Havox::DotParser do
+describe Havox::Topology do
   describe '.new' do
-    it 'instantiates a parser for a target .dot file' do
+    it 'instantiates a parsed topology for a target .dot file' do
       pending 'Implement this test'
       expect(true).to be(false)
     end

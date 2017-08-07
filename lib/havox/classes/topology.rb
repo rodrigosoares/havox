@@ -1,5 +1,5 @@
 module Havox
-  class DotParser
+  class Topology
     attr_reader :nodes, :edges
 
     NODE_REGEX = /^\s*(?<name>\w+)\s?\[(?<attributes>.*)\];$/i

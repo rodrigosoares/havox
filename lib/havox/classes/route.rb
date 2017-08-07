@@ -40,6 +40,10 @@ module Havox
         interface: @interface, timestamp: @timestamp, best: @best, fib: @fib }
     end
 
+    def direct?
+      @via.nil?
+    end
+
     def bgp?
       @protocol.eql?(:bgp)
     end

@@ -48,4 +48,25 @@ describe Havox::Route do
       expect(route.to_h).to eq(hash)
     end
   end
+
+  describe '#direct?' do
+    it 'tells if a route is directly connected' do
+      pending 'Implement this test'
+      expect(true).to be(false)
+    end
+  end
+
+  describe '#ospf?' do
+    it 'tells if a route is OSPF' do
+      pending 'Implement this test'
+      expect(true).to be(false)
+    end
+  end
+
+  describe '#bgp?' do
+    it 'tells if a route is BGP' do
+      pending 'Implement this test'
+      expect(true).to be(false)
+    end
+  end
 end

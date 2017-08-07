@@ -26,8 +26,8 @@ module Havox
     end
 
     def parsed_hosts
-      dot_parser = Havox::DotParser.new(@topology_file_path)
-      dot_parser.host_names
+      topology = Havox::Topology.new(@topology_file_path)
+      topology.host_names
     end
 
     def basic_policies(hosts_array)
