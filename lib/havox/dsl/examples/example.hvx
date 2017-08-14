@@ -1,4 +1,6 @@
 Havox::Network.define do
+  topology 'lib/merlin/topologies/routeflow.dot'
+
   balance { destination_port 80 }
   drop    { destination_port 25 }
 

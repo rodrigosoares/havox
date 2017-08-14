@@ -12,6 +12,10 @@ module Havox
     class UnpredictedAction < StandardError; end
   end
 
+  module Network
+    class InvalidTopology < StandardError; end
+  end
+
   class UnknownTranslator < StandardError; end
   class UnknownAction < StandardError; end
   class OperationError < StandardError; end

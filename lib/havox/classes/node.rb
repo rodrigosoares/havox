@@ -4,7 +4,7 @@ module Havox
 
     def initialize(name, attributes)
       @name = name
-      @type = attributes[:type]&.to_sym 
+      @type = attributes[:type]&.to_sym
       @attributes = attributes
     end
   end

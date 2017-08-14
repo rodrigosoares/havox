@@ -16,6 +16,13 @@ module Havox
       @nodes.select { |n| n.type.eql?(:host) }.map(&:name)
     end
 
+    def switch_ips
+      switches = @nodes.select { |n| n.type.eql?(:switch) }
+      switch_ip_hash = {}
+      switches.each { |n| switch_ip_hash[n.name] = n.attributes[:ip] }
+      switch_ip_hash
+    end
+
     private
 
     def parse_dot_file

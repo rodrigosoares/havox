@@ -7,7 +7,7 @@ module Havox
     def self.snippets; @snippets end
     def self.grouped_routes; @grouped_routes end
     def self.topology; @topology end
-
+    def self.topology=(topo); @topology = topo end
 
     def self.define(&block)
       clear_instance_vars
