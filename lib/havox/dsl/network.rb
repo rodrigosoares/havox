@@ -20,9 +20,9 @@ module Havox
     end
 
     def self.evaluate_topology
+      direct_ospf_routes = @routes.select { |r| r.ospf? && r.direct? }
+      grouped_routes = direct_ospf_routes.group_by(&:network)
       @topology.switch_ips.each do |switch_name, switch_ip|
-        direct_ospf_routes = @routes.select { |r| r.ospf? && r.direct? }
-        grouped_routes = direct_ospf_routes.group_by(&:network)
         infer_device_names(grouped_routes, switch_name, switch_ip)
       end
     end
