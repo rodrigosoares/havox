@@ -1,4 +1,5 @@
 require 'json'
+require 'ipaddr'
 require 'singleton'
 require 'havox/version'
 require 'havox/exceptions'

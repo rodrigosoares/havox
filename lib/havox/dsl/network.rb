@@ -1,11 +1,13 @@
 module Havox
   module Network
     @snippets = []
-    @grouped_routes = []
+    @routes = []
+    @device_names = {}
     @topology = nil
 
     def self.snippets; @snippets end
-    def self.grouped_routes; @grouped_routes end
+    def self.routes; @routes end
+    def self.device_names; @device_names end
     def self.topology; @topology end
     def self.topology=(topo); @topology = topo end
 
@@ -13,13 +15,27 @@ module Havox
       clear_instance_vars
       snippet_proxy = Havox::DSL::SnippetProxy.new
       snippet_proxy.instance_eval(&block)
-      read_routes
+      @routes = Havox::RIB.new.routes
+      evaluate_topology
     end
 
-    def self.read_routes(opts = {})
-      routes = Havox::RIB.new(opts).routes
-      # @grouped_routes = routes.select(&:bgp?).group_by(&:network)
-      @grouped_routes = routes.select(&:ospf?).group_by(&:network)
+    def self.evaluate_topology
+      @topology.switch_ips.each do |switch_name, switch_ip|
+        direct_ospf_routes = @routes.select { |r| r.ospf? && r.direct? }
+        grouped_routes = direct_ospf_routes.group_by(&:network)
+        infer_device_names(grouped_routes, switch_name, switch_ip)
+      end
+    end
+
+    def self.infer_device_names(grouped_routes, switch_name, switch_ip)
+      grouped_routes.each do |network_str, routes|
+        network = IPAddr.new(network_str)
+        if network.include?(switch_ip)
+          router_name = routes.last.router
+          @device_names[router_name] = switch_name
+          break
+        end
+      end
     end
 
     def self.transpile(opts = {})
@@ -28,7 +44,9 @@ module Havox
 
     def self.clear_instance_vars
       @snippets = []
-      @grouped_routes = []
+      @routes = []
+      @device_names = {}
+      @topology = nil
     end
   end
 end
