@@ -8,6 +8,12 @@ module Havox
       fetch_routes
     end
 
+    def routes_to(ip, protocol = :bgp)
+      @routes.select do |r|
+        r.protocol == protocol && IPAddr.new(r.network).include?(ip)
+      end
+    end
+
     private
 
     def fetch_routes
