@@ -8,14 +8,14 @@ describe Havox::Network do
     end
   end
 
-  describe '.routes' do
-    it 'returns the known RIB routes' do
+  describe '.rib' do
+    it 'returns the network RIB' do
       pending 'Implement this test'
       expect(true).to be(false)
     end
   end
 
-  describe '.device_names' do
+  describe '.devices' do
     it 'returns the associations between routers and switches' do
       pending 'Implement this test'
       expect(true).to be(false)
