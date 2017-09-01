@@ -19,9 +19,9 @@ module Havox
 
       DEFAULT_REGEX_PATH = '.*'
 
-      def initialize(action)
+      def initialize(action, attributes = {})
         @action = action
-        @attributes = {}
+        @attributes = attributes
       end
 
       def method_missing(name, *args, &block)

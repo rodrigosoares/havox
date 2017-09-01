@@ -11,9 +11,19 @@ module Havox
 
     private
 
-    ARP_POLICY  = 'ethTyp = 2054 -> .* at min(100 Mbps);'
-    ICMP_POLICY = 'ethTyp = 2048 and ipProto = 1 -> .* at min(100 Mbps);'
-    POLICIES    = [ICMP_POLICY, ARP_POLICY]
+    def arp_policy
+      Havox::DSL::Snippet.new(nil, ethernet_type: 2054).
+        to_statement('.*', 'min(100 Mbps)')
+    end
+
+    def icmp_policy
+      Havox::DSL::Snippet.new(nil, ethernet_type: 2048, ip_protocol: 1).
+        to_statement('.*', 'min(100 Mbps)')
+    end
+
+    def policies
+      [icmp_policy, arp_policy]
+    end
 
     def append_basic_policies
       policy_file_string = File.read(@original_policy_file_path)
@@ -33,7 +43,7 @@ module Havox
     def basic_policies(hosts_array)
       hosts_str = "{ #{hosts_array.join('; ')} }"
       result = []
-      POLICIES.each { |policy| result << "#{policy_code(policy, hosts_str)}" }
+      policies.each { |policy| result << "#{policy_code(policy, hosts_str)}" }
       result.join("\n")
     end
 
