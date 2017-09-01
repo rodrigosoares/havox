@@ -34,6 +34,22 @@ module Havox
         qos_str = qos.nil? ? '' : " at #{qos}"
         "#{predicate} -> #{regex_path}#{qos_str};"
       end
+
+      def to_block(src_hosts, dst_hosts, regex_path = DEFAULT_REGEX_PATH, qos = nil)
+        "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(regex_path, qos)}\n"
+      end
+
+      private
+
+      def format_hosts(host_names)
+        "{ #{host_names.join('; ')} }"
+      end
+
+      def foreach_code(src_hosts, dst_hosts)
+        src_hosts_str = format_hosts(src_hosts)
+        dst_hosts_str = format_hosts(dst_hosts)
+        "foreach (s, d): cross(#{src_hosts_str}, #{dst_hosts_str})"
+      end
     end
   end
 end

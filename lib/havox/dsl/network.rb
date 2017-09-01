@@ -21,9 +21,12 @@ module Havox
 
     def self.transpile(opts = {})
       stmts = []
+      hosts = @topology.host_names
       exit_switches(opts).each do |switch|
         regex_path = ".* #{switch}"
-        stmts += @snippets.map { |s| s.to_statement(regex_path, opts[:qos]) }
+        stmts += @snippets.map do |s|
+          s.to_block(hosts, hosts, regex_path, opts[:qos])
+        end
       end
       stmts
     end
