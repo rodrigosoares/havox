@@ -7,5 +7,13 @@ module Havox
       @type = attributes[:type]&.to_sym
       @attributes = attributes
     end
+
+    def host?
+      @type.eql?(:host)
+    end
+
+    def switch?
+      @type.eql?(:switch)
+    end
   end
 end

@@ -14,4 +14,18 @@ describe Havox::Topology do
       expect(true).to be(false)
     end
   end
+
+  describe '#switch_ips' do
+    it 'returns an hash of switches and their IP addresses' do
+      pending 'Implement this test'
+      expect(true).to be(false)
+    end
+  end
+
+  describe '#switch_hosts' do
+    it 'returns an hash of switches and their connected hosts array' do
+      pending 'Implement this test'
+      expect(true).to be(false)
+    end
+  end
 end

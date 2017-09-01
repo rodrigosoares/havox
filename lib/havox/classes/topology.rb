@@ -13,14 +13,27 @@ module Havox
     end
 
     def host_names
-      @nodes.select { |n| n.type.eql?(:host) }.map(&:name)
+      @nodes.select(&:host?).map(&:name)
     end
 
     def switch_ips
-      switches = @nodes.select { |n| n.type.eql?(:switch) }
+      switches = @nodes.select(&:switch?)
       switch_ip_hash = {}
-      switches.each { |n| switch_ip_hash[n.name] = n.attributes[:ip] }
+      switches.each { |s| switch_ip_hash[s.name] = s.attributes[:ip] }
       switch_ip_hash
+    end
+
+    def switch_hosts
+      exit_edges = @edges.select { |e| e.from.switch? && e.to.host? }
+      hash = {}
+      exit_edges.each do |e|
+        if hash[e.from.name].nil?
+          hash[e.from.name] = [e.to.name]
+        else
+          hash[e.from.name] << e.to.name
+        end
+      end
+      hash
     end
 
     private
@@ -44,7 +57,9 @@ module Havox
       match = line.match(EDGE_REGEX)
       unless match.nil?
         attributes = hashed_attributes(match[:attributes].to_s)
-        @edges << Havox::Edge.new(match[:from].to_s, match[:to].to_s, attributes)
+        node_from = @nodes.find { |n| n.name.eql?(match[:from].to_s) }
+        node_to = @nodes.find { |n| n.name.eql?(match[:to].to_s) }
+        @edges << Havox::Edge.new(node_from, node_to, attributes)
       end
     end
 
