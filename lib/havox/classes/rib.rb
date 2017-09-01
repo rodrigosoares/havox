@@ -10,8 +10,12 @@ module Havox
 
     def routes_to(ip, protocol = :bgp)
       @routes.select do |r|
-        r.protocol == protocol && IPAddr.new(r.network).include?(ip)
+        r.protocol.eql?(protocol) && IPAddr.new(r.network).include?(ip)
       end
+    end
+
+    def network_list(protocol = :bgp)
+      @routes.select { |r| r.protocol.eql?(protocol) }.map(&:network).uniq
     end
 
     private

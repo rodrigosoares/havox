@@ -20,7 +20,12 @@ module Havox
     end
 
     def self.transpile(opts = {})
-      # predicate_array = @snippets.map(&:to_predicate)
+      stmts = []
+      exit_switches(opts).each do |switch|
+        regex_path = ".* #{switch}"
+        stmts += @snippets.map { |s| s.to_statement(regex_path, opts[:qos]) }
+      end
+      stmts
     end
 
     class << self
@@ -43,6 +48,22 @@ module Havox
             break
           end
         end
+      end
+
+      def exit_switches(opts)
+        return opts[:arbitrary] unless opts[:arbitrary].nil?
+        switches = []
+        @rib.network_list.each do |network|
+          routes = @rib.routes_to(network)
+          switches << elected_switch(routes, opts[:preferred])
+        end
+        switches
+      end
+
+      def elected_switch(routes, preferred_switches)
+        switches = routes.map { |r| @devices[r.router] }
+        intersection_switches = (switches & preferred_switches.to_a)
+        intersection_switches.sample || switches.sample
       end
 
       def clear_instance_vars

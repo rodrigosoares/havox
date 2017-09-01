@@ -3,7 +3,7 @@ module Havox
     class Snippet
       attr_reader :attributes
 
-      PREDICATE_DIC = {
+      MERLIN_DIC = {
         destination_ip:   'ipDst',
         destination_mac:  'ethDst',
         destination_port: 'tcpDstPort',
@@ -17,6 +17,8 @@ module Havox
         vlan_priority:    'vlanPcp'
       }
 
+      DEFAULT_REGEX_PATH = '.*'
+
       def initialize(action)
         @action = action
         @attributes = {}
@@ -26,12 +28,11 @@ module Havox
         @attributes[name] = args.first
       end
 
-      def to_predicate
-        attrs_array = @attributes.map do |field, value|
-          merlin_field = PREDICATE_DIC[field]
-          "#{merlin_field} = #{value}"
-        end
-        attrs_array.join(' and ')
+      def to_statement(regex_path = DEFAULT_REGEX_PATH, qos = nil)
+        fields = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{v}" }
+        predicate = fields.join(' and ')
+        qos_str = qos.nil? ? '' : " at #{qos}"
+        "#{predicate} -> #{regex_path}#{qos_str};"
       end
     end
   end

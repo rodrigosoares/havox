@@ -15,8 +15,8 @@ describe Havox::DSL::Snippet do
     end
   end
 
-  describe '#to_predicate' do
-    it 'translates the attributes into Merlin predicate' do
+  describe '#to_statement' do
+    it 'translates the attributes into a Merlin statement' do
       pending 'Implement this test'
       expect(true).to be(false)
     end
