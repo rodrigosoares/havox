@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'awesome_print', '~> 1.7'
   spec.add_runtime_dependency     'net-ssh', '~> 4.0'
   spec.add_runtime_dependency     'net-scp', '~> 1.2'
-  spec.add_runtime_dependency     'trema', '~> 0.10'
+  spec.add_runtime_dependency     'trema', '~> 0.10.1'
   spec.add_runtime_dependency     'colorize', '~> 0.8'
 end
