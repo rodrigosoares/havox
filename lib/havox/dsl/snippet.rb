@@ -29,7 +29,7 @@ module Havox
       end
 
       def to_statement(regex_path = DEFAULT_REGEX_PATH, qos = nil)
-        fields = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{v}" }
+        fields = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{treated(v, k)}" }
         predicate = fields.join(' and ')
         qos_str = qos.nil? ? '' : " at #{qos}"
         "#{predicate} -> #{regex_path}#{qos_str};"
@@ -49,6 +49,18 @@ module Havox
         src_hosts_str = format_hosts(src_hosts)
         dst_hosts_str = format_hosts(dst_hosts)
         "foreach (s, d): cross(#{src_hosts_str}, #{dst_hosts_str})"
+      end
+
+      def treated(value, field)
+        case field
+        when :source_ip      then netmask_removed(value)
+        when :destination_ip then netmask_removed(value)
+        else value
+        end
+      end
+
+      def netmask_removed(ip)
+        IPAddr.new(ip).to_s
       end
     end
   end

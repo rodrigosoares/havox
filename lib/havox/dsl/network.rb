@@ -1,8 +1,8 @@
 module Havox
   module Network
-    @rib      = []
     @snippets = []
     @devices  = {}
+    @rib      = nil
     @topology = nil
 
     def self.snippets; @snippets end
@@ -30,6 +30,10 @@ module Havox
         end
       end
       stmts
+    end
+
+    def self.reachable(protocol = :bgp)
+      @rib.network_list(protocol) unless @rib.nil?
     end
 
     class << self
@@ -71,9 +75,9 @@ module Havox
       end
 
       def clear_instance_vars
-        @rib      = []
         @snippets = []
         @devices  = {}
+        @rib      = nil
         @topology = nil
       end
     end
