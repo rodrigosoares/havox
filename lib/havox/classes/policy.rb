@@ -28,7 +28,8 @@ module Havox
 
     def treat_rules
       @rules.each do |r|
-        r.matches[src_ip] = netmask_added(r.matches[src_ip]) unless r.matches[src_ip].nil?
+        # Source IP treatment disabled because RouteFlow does not implement it yet.
+        # r.matches[src_ip] = netmask_added(r.matches[src_ip]) unless r.matches[src_ip].nil?
         r.matches[dst_ip] = netmask_added(r.matches[dst_ip]) unless r.matches[dst_ip].nil?
       end
     end

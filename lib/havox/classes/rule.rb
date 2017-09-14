@@ -66,18 +66,9 @@ module Havox
     def already_set?(matches_hash, stmt)
       field = translate.fields_to(@syntax)[stmt.first]
       unless matches_hash[field].nil? || matches_hash[field].eql?(stmt.last)
-        return ignore_conflict?(field, matches_hash[field], stmt.last)
+        return !@opts[:force]
       end
       false
-    end
-
-    def ignore_conflict?(field, old_value, new_value)
-      unless @opts[:force]
-        raise Havox::Merlin::FieldConflict,
-          "Attempted to define field '#{field}' with #{new_value}, but it is " \
-          "already defined with #{old_value}"
-      end
-      true
     end
   end
 end
