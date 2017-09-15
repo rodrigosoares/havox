@@ -6,7 +6,7 @@ module Havox
       @opts = opts
       @rules = nil
       generate_rules
-      treat_rules unless Havox::Network.reachable.nil?
+      check_ip_netmasks unless Havox::Network.reachable.nil?
     end
 
     def to_json
@@ -26,11 +26,12 @@ module Havox
       )
     end
 
-    def treat_rules
+    def check_ip_netmasks
       @rules.each do |r|
-        # Source IP treatment disabled because RouteFlow does not implement it yet.
-        # r.matches[src_ip] = netmask_added(r.matches[src_ip]) unless r.matches[src_ip].nil?
-        r.matches[dst_ip] = netmask_added(r.matches[dst_ip]) unless r.matches[dst_ip].nil?
+        r.matches[src_ip] = netmask_added_or_nil(r.matches[src_ip]) unless r.matches[src_ip].nil?
+        r.matches[dst_ip] = netmask_added_or_nil(r.matches[dst_ip]) unless r.matches[dst_ip].nil?
+        r.matches.delete(src_ip) if r.matches[src_ip].nil?
+        r.matches.delete(dst_ip) if r.matches[dst_ip].nil?
       end
     end
 
@@ -42,11 +43,11 @@ module Havox
       Havox::Translator.instance.fields_to(@opts[:syntax])[MERLIN_IP_DST]
     end
 
-    def netmask_added(ip)
+    def netmask_added_or_nil(ip)
       Havox::Network.reachable.each do |network|
         return network if IPAddr.new(network).include?(ip)
       end
-      ip
+      nil
     end
   end
 end
