@@ -2,10 +2,10 @@ Havox::Network.define do
   topology 'lib/merlin/topologies/routeflow.dot'
 
   balance { destination_port 80 }
-  drop    { destination_port 25 }
+  balance { destination_port 25 }
 
   balance do
     destination_port 80
-    destination_ip   '172.31.4.100'
+    destination_ip   '172.50.0.0'
   end
 end
