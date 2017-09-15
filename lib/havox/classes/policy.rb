@@ -6,7 +6,7 @@ module Havox
       @opts = opts
       @rules = nil
       generate_rules
-      check_ip_netmasks unless Havox::Network.reachable.nil?
+      check_ip_netmasks if Havox::Network.reachable.any?
     end
 
     def to_json
@@ -17,6 +17,8 @@ module Havox
 
     MERLIN_IP_SRC = 'ipSrc'
     MERLIN_IP_DST = 'ipDst'
+    MERLIN_ETHERTYPE = 'ethTyp'
+    ETHERTYPE_IP  = 2048
 
     def generate_rules
       @rules = Havox::Merlin.compile!(
@@ -28,10 +30,10 @@ module Havox
 
     def check_ip_netmasks
       @rules.each do |r|
-        r.matches[src_ip] = netmask_added_or_nil(r.matches[src_ip]) unless r.matches[src_ip].nil?
-        r.matches[dst_ip] = netmask_added_or_nil(r.matches[dst_ip]) unless r.matches[dst_ip].nil?
-        r.matches.delete(src_ip) if r.matches[src_ip].nil?
-        r.matches.delete(dst_ip) if r.matches[dst_ip].nil?
+        r.matches[src_ip] = netmasked_or_nil(r.matches[src_ip]) if r.matches.key?(src_ip)
+        r.matches[dst_ip] = netmasked_or_nil(r.matches[dst_ip]) if r.matches.key?(dst_ip)
+        delete_ip_match(r.matches, src_ip) if has_key_but_nil?(r.matches, src_ip)
+        delete_ip_match(r.matches, dst_ip) if has_key_but_nil?(r.matches, dst_ip)
       end
     end
 
@@ -43,11 +45,24 @@ module Havox
       Havox::Translator.instance.fields_to(@opts[:syntax])[MERLIN_IP_DST]
     end
 
-    def netmask_added_or_nil(ip)
+    def ethertype
+      Havox::Translator.instance.fields_to(@opts[:syntax])[MERLIN_ETHERTYPE]
+    end
+
+    def delete_ip_match(matches, target_ip_key)
+      matches.delete(target_ip_key)
+      matches[ethertype] = ETHERTYPE_IP unless matches.key?(ethertype)
+    end
+
+    def netmasked_or_nil(ip)
       Havox::Network.reachable.each do |network|
         return network if IPAddr.new(network).include?(ip)
       end
       nil
+    end
+
+    def has_key_but_nil?(matches, target_key)
+      matches.key?(target_key) && matches[target_key].nil?
     end
   end
 end

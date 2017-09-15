@@ -33,7 +33,7 @@ module Havox
     end
 
     def self.reachable(protocol = :bgp)
-      @rib.network_list(protocol) unless @rib.nil?
+      @rib.nil? ? [] : @rib.network_list(protocol)
     end
 
     class << self
