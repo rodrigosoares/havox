@@ -1,12 +1,12 @@
 module Havox
   module DSL
     class SnippetProxy
-      def balance(&block)
-        eval_snippet(:balance, &block)
+      def balance(switch, &block)
+        eval_snippet(:balance, switch, &block)
       end
 
       def drop(&block)
-        eval_snippet(:drop, &block)
+        eval_snippet(:drop, nil, &block)
       end
 
       def topology(file_path)
@@ -17,8 +17,8 @@ module Havox
 
       private
 
-      def eval_snippet(action, &block)
-        snippet = Havox::DSL::Snippet.new(action)
+      def eval_snippet(action, switch, &block)
+        snippet = Havox::DSL::Snippet.new(action, switch)
         snippet.instance_eval(&block)
         Havox::Network.snippets << snippet
       end

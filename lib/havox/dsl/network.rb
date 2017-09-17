@@ -20,16 +20,11 @@ module Havox
     end
 
     def self.transpile(opts = {})
-      stmts = []
-      exit_switches(opts).each do |switch|
-        src_hosts = @topology.host_names - @topology.switch_hosts[switch]
-        dst_hosts = @topology.switch_hosts[switch]
-        regex_path = ".* #{switch}"
-        stmts += @snippets.map do |s|
-          s.to_block(src_hosts, dst_hosts, regex_path, opts[:qos])
-        end
+      @snippets.map do |s|
+        src_hosts = @topology.host_names - @topology.switch_hosts[s.switch.to_s]
+        dst_hosts = @topology.switch_hosts[s.switch.to_s]
+        s.to_block(src_hosts, dst_hosts, opts[:qos])
       end
-      stmts
     end
 
     def self.reachable(protocol = :bgp)
@@ -56,22 +51,6 @@ module Havox
             break
           end
         end
-      end
-
-      def exit_switches(opts)
-        return opts[:arbitrary] unless opts[:arbitrary].nil?
-        switches = []
-        @rib.network_list.each do |network|
-          routes = @rib.routes_to(network)
-          switches << elected_switch(routes, opts[:preferred])
-        end
-        switches
-      end
-
-      def elected_switch(routes, preferred_switches)
-        switches = routes.map { |r| @devices[r.router] }
-        intersection_switches = (switches & preferred_switches.to_a)
-        intersection_switches.sample || switches.sample
       end
 
       def clear_instance_vars

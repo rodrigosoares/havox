@@ -1,7 +1,7 @@
 module Havox
   module DSL
     class Snippet
-      attr_reader :attributes
+      attr_reader :switch, :attributes
 
       MERLIN_DIC = {
         destination_ip:   'ipDst',
@@ -17,10 +17,9 @@ module Havox
         vlan_priority:    'vlanPcp'
       }
 
-      DEFAULT_REGEX_PATH = '.*'
-
-      def initialize(action, attributes = {})
+      def initialize(action, switch, attributes = {})
         @action = action
+        @switch = switch
         @attributes = attributes
       end
 
@@ -28,18 +27,18 @@ module Havox
         @attributes[name] = args.first
       end
 
-      def to_statement(regex_path = DEFAULT_REGEX_PATH, qos = nil)
+      def to_block(src_hosts, dst_hosts, qos = nil)
+        "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(qos)}\n"
+      end
+
+      private
+
+      def to_statement(qos)
         fields = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{treated(v, k)}" }
         predicate = fields.join(' and ')
         qos_str = qos.nil? ? '' : " at #{qos}"
         "#{predicate} -> #{regex_path}#{qos_str};"
       end
-
-      def to_block(src_hosts, dst_hosts, regex_path = DEFAULT_REGEX_PATH, qos = nil)
-        "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(regex_path, qos)}\n"
-      end
-
-      private
 
       def format_hosts(host_names)
         "{ #{host_names.join('; ')} }"
@@ -61,6 +60,10 @@ module Havox
 
       def netmask_removed(ip)
         IPAddr.new(ip).to_s
+      end
+
+      def regex_path
+        ".* #{@switch.to_s}".strip
       end
     end
   end
