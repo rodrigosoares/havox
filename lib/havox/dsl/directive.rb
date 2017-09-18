@@ -1,6 +1,6 @@
 module Havox
   module DSL
-    class Snippet
+    class Directive
       attr_reader :switch, :attributes
 
       MERLIN_DIC = {

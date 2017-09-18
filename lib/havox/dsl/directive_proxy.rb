@@ -1,12 +1,12 @@
 module Havox
   module DSL
-    class SnippetProxy
+    class DirectiveProxy
       def balance(switch, &block)
-        eval_snippet(:balance, switch, &block)
+        eval_directive(:balance, switch, &block)
       end
 
       def drop(&block)
-        eval_snippet(:drop, nil, &block)
+        eval_directive(:drop, nil, &block)
       end
 
       def topology(file_path)
@@ -17,10 +17,10 @@ module Havox
 
       private
 
-      def eval_snippet(action, switch, &block)
-        snippet = Havox::DSL::Snippet.new(action, switch)
-        snippet.instance_eval(&block)
-        Havox::Network.snippets << snippet
+      def eval_directive(action, switch, &block)
+        directive = Havox::DSL::Directive.new(action, switch)
+        directive.instance_eval(&block)
+        Havox::Network.directives << directive
       end
 
       def raise_invalid_topology(file_path)

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Havox::DSL::SnippetProxy do
+describe Havox::DSL::DirectiveProxy do
   describe '#balance' do
     it 'parses a balance DSL block' do
       pending 'Implement this test'

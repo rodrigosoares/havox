@@ -1,11 +1,11 @@
 module Havox
   module Network
-    @snippets = []
-    @devices  = {}
-    @rib      = nil
-    @topology = nil
+    @directives = []
+    @devices    = {}
+    @rib        = nil
+    @topology   = nil
 
-    def self.snippets; @snippets end
+    def self.directives; @directives end
     def self.rib; @rib end
     def self.devices; @devices end
     def self.topology; @topology end
@@ -13,14 +13,14 @@ module Havox
 
     def self.define(&block)
       clear_instance_vars
-      snippet_proxy = Havox::DSL::SnippetProxy.new
-      snippet_proxy.instance_eval(&block)
+      directive_proxy = Havox::DSL::DirectiveProxy.new
+      directive_proxy.instance_eval(&block)
       @rib = Havox::RIB.new
       evaluate_topology
     end
 
     def self.transpile(opts = {})
-      @snippets.map do |s|
+      @directives.map do |s|
         src_hosts = @topology.host_names - @topology.switch_hosts[s.switch.to_s]
         dst_hosts = @topology.switch_hosts[s.switch.to_s]
         s.to_block(src_hosts, dst_hosts, opts[:qos])
@@ -54,10 +54,10 @@ module Havox
       end
 
       def clear_instance_vars
-        @snippets = []
-        @devices  = {}
-        @rib      = nil
-        @topology = nil
+        @directives = []
+        @devices    = {}
+        @rib        = nil
+        @topology   = nil
       end
     end
   end

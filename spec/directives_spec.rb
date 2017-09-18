@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Havox::DSL::Snippet do
+describe Havox::DSL::Directive do
   describe '.new' do
-    it 'instantiates a snippet object' do
+    it 'instantiates a directive object' do
       pending 'Implement this test'
       expect(true).to be(false)
     end
