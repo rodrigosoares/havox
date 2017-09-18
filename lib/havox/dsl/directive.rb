@@ -17,8 +17,8 @@ module Havox
         vlan_priority:    'vlanPcp'
       }
 
-      def initialize(action, switch, attributes = {})
-        @action = action
+      def initialize(type, switch, attributes = {})
+        @type = type
         @switch = switch
         @attributes = attributes
       end

@@ -17,8 +17,8 @@ module Havox
 
       private
 
-      def eval_directive(action, switch, &block)
-        directive = Havox::DSL::Directive.new(action, switch)
+      def eval_directive(type, switch, &block)
+        directive = Havox::DSL::Directive.new(type, switch)
         directive.instance_eval(&block)
         Havox::Network.directives << directive
       end
