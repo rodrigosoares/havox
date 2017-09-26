@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe Havox::Route do
-  let(:route)        { FactoryGirl.build :route, router: 'foo_vm' }
-  let(:raw_route)    { 'O>* 10.0.0.0/24 [110/20] via 40.0.0.2, eth2, 03:41:18' }
-  let(:expected_str) { 'OSPF: to 10.0.0.0/24 via 40.0.0.2 in eth2, BEST, FIB route' }
+  let(:ospf_route) { FactoryGirl.build :route, router: 'foo_vm' }
+  let(:ibgp_route) { FactoryGirl.build :route, :recursive, protocol: :bgp }
+  let(:raw_route)  { 'O>* 10.0.0.0/24 [110/20] via 40.0.0.2, eth2, 03:41:18' }
+  let(:ospf_str)   { 'OSPF: to 10.0.0.0/24 via 40.0.0.2 in eth2, BEST, FIB route' }
+  let(:ibgp_str)   { 'BGP: to 10.0.0.0/24 via 40.0.0.2 in 50.0.0.1, BEST, FIB route' }
 
   describe '.new' do
     it 'parses a raw route coming from RouteFlow' do
@@ -21,15 +23,16 @@ describe Havox::Route do
 
   describe '#to_s' do
     it 'stringifies the route' do
-      expect(route.to_s).to eq(expected_str)
+      expect(ospf_route.to_s).to eq(ospf_str)
+      expect(ibgp_route.to_s).to eq(ibgp_str)
     end
   end
 
   describe '#inspect' do
     it 'stringifies the route with an unique ID and a router name' do
-      route_id_str = "Route #{route.object_id.to_s(16)}"
-      router_name_str = "router #{route.router}"
-      expect(route.inspect).to include(route_id_str, router_name_str, expected_str)
+      route_id_str = "Route #{ospf_route.object_id.to_s(16)}"
+      router_name_str = "router #{ospf_route.router}"
+      expect(ospf_route.inspect).to include(route_id_str, router_name_str, ospf_str)
     end
   end
 
@@ -40,12 +43,13 @@ describe Havox::Route do
         protocol: :ospf,
         network: '10.0.0.0/24',
         via: '40.0.0.2',
+        recursive_via: nil,
         interface: 'eth2',
         timestamp: '03:41:18',
         best: true,
         fib: true
       }
-      expect(route.to_h).to eq(hash)
+      expect(ospf_route.to_h).to eq(hash)
     end
   end
 

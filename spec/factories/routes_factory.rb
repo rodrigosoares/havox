@@ -16,5 +16,17 @@ FactoryGirl.define do
       transient { protocol :bgp }
       raw { "B>* #{network} [110/20] via #{via}, #{interface}, 03:41:18" }
     end
+
+    trait :recursive do
+      transient do
+        interface nil
+        recursive_via '50.0.0.1'
+      end
+
+      raw do
+        "#{protocol.to_s[0].upcase}>* #{network} [200/0] via #{via} " \
+        "(recursive via #{recursive_via}), 00:44:31"
+      end
+    end
   end
 end
