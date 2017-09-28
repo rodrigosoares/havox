@@ -28,5 +28,10 @@ FactoryGirl.define do
         "(recursive via #{recursive_via}), 00:44:31"
       end
     end
+
+    trait :direct do
+      transient { via nil }
+      raw { "O>* #{network} [110/20] is directly connected, #{interface}, 03:41:18" }
+    end
   end
 end

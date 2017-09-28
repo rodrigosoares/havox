@@ -54,23 +54,22 @@ describe Havox::Route do
   end
 
   describe '#direct?' do
+    let(:direct_route) { FactoryGirl.build(:route, :direct) }
+
     it 'tells if a route is directly connected' do
-      pending 'Implement this test'
-      expect(true).to be(false)
+      expect(direct_route).to be_direct
     end
   end
 
   describe '#ospf?' do
     it 'tells if a route is OSPF' do
-      pending 'Implement this test'
-      expect(true).to be(false)
+      expect(ospf_route).to be_ospf
     end
   end
 
   describe '#bgp?' do
     it 'tells if a route is BGP' do
-      pending 'Implement this test'
-      expect(true).to be(false)
+      expect(ibgp_route).to be_bgp
     end
   end
 end

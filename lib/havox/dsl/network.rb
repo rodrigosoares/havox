@@ -12,7 +12,7 @@ module Havox
     def self.topology=(topo); @topology = topo end
 
     def self.define(&block)
-      clear_instance_vars
+      reset!
       directive_proxy = Havox::DSL::DirectiveProxy.new
       directive_proxy.instance_eval(&block)
       @rib = Havox::RIB.new
@@ -20,15 +20,22 @@ module Havox
     end
 
     def self.transpile(opts = {})
-      @directives.map do |s|
-        src_hosts = @topology.host_names - @topology.switch_hosts[s.switch.to_s]
-        dst_hosts = @topology.switch_hosts[s.switch.to_s]
-        s.to_block(src_hosts, dst_hosts, opts[:qos])
+      @directives.map do |d|
+        src_hosts = @topology.host_names - @topology.switch_hosts[d.switch.to_s]
+        dst_hosts = @topology.switch_hosts[d.switch.to_s]
+        d.to_block(src_hosts, dst_hosts, opts[:qos])
       end
     end
 
     def self.reachable(protocol = :bgp)
       @rib.nil? ? [] : @rib.network_list(protocol)
+    end
+
+    def self.reset!
+      @directives = []
+      @devices    = {}
+      @rib        = nil
+      @topology   = nil
     end
 
     class << self
@@ -51,13 +58,6 @@ module Havox
             break
           end
         end
-      end
-
-      def clear_instance_vars
-        @directives = []
-        @devices    = {}
-        @rib        = nil
-        @topology   = nil
       end
     end
   end

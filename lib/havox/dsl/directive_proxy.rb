@@ -5,9 +5,9 @@ module Havox
         eval_directive(:balance, switch, &block)
       end
 
-      def drop(&block)
-        eval_directive(:drop, nil, &block)
-      end
+      # def drop(&block)
+      #   eval_directive(:drop, nil, &block)
+      # end
 
       def topology(file_path)
         raise_invalid_topology(file_path) unless File.exists?(file_path)

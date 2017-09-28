@@ -32,7 +32,30 @@ module MockHelper
   end
 
   def topology_file_content
-    "digraph g1 {\n  h1 [type = host];\n  h2 [type = host];\n}\n"
+    "digraph g1 {\n"\
+    "  h1 [type = host, ip = \"10.0.0.1\"];\n" \
+    "  h2 [type = host, ip = \"10.0.0.2\"];\n" \
+    "  s1 [type = switch, ip = \"10.0.0.3\"];\n" \
+    "  s1 -> h1 [src_port = 1, dst_port = 1];\n" \
+    "  h1 -> s1 [src_port = 1, dst_port = 1];\n" \
+    "  s1 -> h2 [src_port = 2, dst_port = 1];\n" \
+    "  h2 -> s1 [src_port = 1, dst_port = 2];\n" \
+    "}\n"
+  end
+
+  def topo_2h_2sw_content
+    "digraph g1 {\n"\
+    "  h1 [type = host, ip = \"172.31.1.100\"];\n" \
+    "  h2 [type = host, ip = \"172.31.2.100\"];\n" \
+    "  s1 [type = switch, ip = \"172.31.1.1\", id = 1];\n" \
+    "  s2 [type = switch, ip = \"172.31.2.1\", id = 2];\n" \
+    "  s1 -> h1 [src_port = 1, dst_port = 1];\n" \
+    "  h1 -> s1 [src_port = 1, dst_port = 1];\n" \
+    "  s2 -> h2 [src_port = 1, dst_port = 1];\n" \
+    "  h2 -> s2 [src_port = 1, dst_port = 1];\n" \
+    "  s1 -> s2 [src_port = 2, dst_port = 2];\n" \
+    "  s2 -> s1 [src_port = 2, dst_port = 2];\n" \
+    "}\n"
   end
 
   def policy_file_content

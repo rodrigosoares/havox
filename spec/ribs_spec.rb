@@ -26,4 +26,10 @@ describe Havox::RIB do
       expect(subject.routes_to(target_ip)).to contain_exactly(bgp_route)
     end
   end
+
+  describe '#network_list' do
+    it 'returns a list of reachable networks' do
+      expect(subject.network_list).to contain_exactly(network)
+    end
+  end
 end

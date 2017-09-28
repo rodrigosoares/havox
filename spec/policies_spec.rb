@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe Havox::Policy do
-  let(:rule) { FactoryGirl.build :rule }
+  let(:rule) { FactoryGirl.build(:rule, ipv4_dst: IPAddr.new('200.156.0.0').to_i) }
 
   let :options do
-    { merlin_topology: '/path/to/topology.dot', merlin_policy: '/path/to/policy.mln' }
+    { merlin_topology: '/path/to/topology.dot', merlin_policy: '/path/to/policy.mln',
+      syntax: :trema, force: true }
   end
 
   before :each do
@@ -17,6 +18,22 @@ describe Havox::Policy do
     it 'creates a policy object encapsulating generated rules' do
       new_policy = Havox::Policy.new(options)
       expect(new_policy.rules).to include(rule)
+    end
+
+    context 'when the reachable networks list is not empty' do
+      before :each do
+        allow(Havox::Network).to receive(:reachable).and_return(['200.156.0.0/16'])
+        policy = Havox::Policy.new(options)
+        @sample_rule = policy.rules.sample
+      end
+
+      it 'switches IP address matches by their masked networks' do
+        expect(@sample_rule.matches).to include(destination_ip_address: '200.156.0.0/16')
+      end
+
+      it 'discards invalid Merlin host address matches' do
+        expect(@sample_rule.matches).not_to have_key(:source_ip_address)
+      end
     end
   end
 
