@@ -1,11 +1,11 @@
 Havox::Network.define do
   topology 'lib/merlin/topologies/routeflow.dot'
 
-  balance(:s5) { destination_port 80 }
-  balance(:s6) { destination_ip '172.50.0.0/16' }
-  balance(:s7) { source_ip '172.70.0.0/16' }
+  exit(:s5) { destination_port 80 }
+  exit(:s6) { destination_ip '172.50.0.0/16' }
+  exit(:s7) { source_ip '172.70.0.0/16' }
 
-  balance :s8 do
+  exit :s8 do
     destination_port 20
     destination_ip '172.50.0.0/16'
   end

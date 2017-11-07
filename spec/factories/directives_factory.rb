@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :directive, class: Havox::DSL::Directive do
-    type   :balance
+    type   :exit
     switch 's1'
     attrs  { Hash[destination_port: 80] }
 

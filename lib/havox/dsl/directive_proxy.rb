@@ -1,8 +1,8 @@
 module Havox
   module DSL
     class DirectiveProxy
-      def balance(switch, &block)
-        eval_directive(:balance, switch, &block)
+      def exit(switch, &block)
+        eval_directive(:exit, switch, &block)
       end
 
       # def drop(&block)

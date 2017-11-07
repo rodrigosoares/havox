@@ -8,13 +8,13 @@ describe Havox::DSL::DirectiveProxy do
 
   before(:each) { Havox::Network.reset! }
 
-  describe '#balance' do
-    it 'parses a balance directive block' do
-      balance_block = proc { balance(:s1) { source_port 20 } }
-      subject.instance_eval(&balance_block)
+  describe '#exit' do
+    it 'parses a exit directive block' do
+      exit_block = proc { exit(:s1) { source_port 20 } }
+      subject.instance_eval(&exit_block)
       directive = Havox::Network.directives.sample
       expect(directive).to be_instance_of(Havox::DSL::Directive)
-      expect(directive.instance_variable_get(:@type)).to be(:balance)
+      expect(directive.instance_variable_get(:@type)).to be(:exit)
       expect(directive.switch).to be(:s1)
       expect(directive.attributes).to include(source_port: 20)
     end

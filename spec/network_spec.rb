@@ -11,7 +11,7 @@ describe Havox::Network do
   let :definition_block do
     proc do
       topology 'topo.dot'
-      balance(:s1) { destination_port 80 }
+      exit(:s1) { destination_port 80 }
     end
   end
 
