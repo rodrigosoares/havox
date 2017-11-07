@@ -19,7 +19,7 @@ module Havox
       evaluate_topology
     end
 
-    def self.transpile(opts = {})
+    def self.transcompile(opts = {})
       @directives.map do |d|
         src_hosts = @topology.host_names - @topology.switch_hosts[d.switch.to_s]
         dst_hosts = @topology.switch_hosts[d.switch.to_s]
