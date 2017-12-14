@@ -4,8 +4,7 @@ module Havox
 
     def initialize(opts = {})
       @opts = opts
-      @routes = nil
-      fetch_routes
+      @routes = Havox::RouteFlow.ribs(vm_names, @opts)
     end
 
     def routes_to(ip, protocol = :bgp)
@@ -19,10 +18,6 @@ module Havox
     end
 
     private
-
-    def fetch_routes
-      @routes = Havox::RouteFlow.ribs(vm_names, @opts)
-    end
 
     def vm_names
       case @opts[:vm_names]
