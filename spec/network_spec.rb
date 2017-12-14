@@ -39,8 +39,24 @@ describe Havox::Network do
   end
 
   describe '.devices' do
-    it 'returns the associations between routers and switches' do
-      expect(subject.devices).to include('rfvmA' => 's1', 'rfvmB' => 's2')
+    let :new_block do
+      proc do
+        topology 'topo.dot'
+        associate :rfvmA, :s1
+        associate :rfvmB, :s2
+        exit(:s1) { destination_port 80 }
+      end
+    end
+
+    context 'returns the associations between routers and switches' do
+      it 'by association directives' do
+        subject.define(&new_block)
+        expect(subject.devices).to include('rfvmA' => 's1', 'rfvmB' => 's2')
+      end
+
+      it 'by OSPF inference, otherwise' do
+        expect(subject.devices).to include('rfvmA' => 's1', 'rfvmB' => 's2')
+      end
     end
   end
 

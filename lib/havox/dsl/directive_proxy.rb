@@ -15,6 +15,10 @@ module Havox
         Havox::Network.topology = topo
       end
 
+      def associate(router, switch)
+        Havox::Network.devices[router.to_s] = switch.to_s
+      end
+
       private
 
       def eval_directive(type, switch, &block)

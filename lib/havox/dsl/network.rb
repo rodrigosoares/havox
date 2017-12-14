@@ -16,7 +16,7 @@ module Havox
       directive_proxy = Havox::DSL::DirectiveProxy.new
       directive_proxy.instance_eval(&block)
       @rib = Havox::RIB.new
-      evaluate_topology
+      infer_associations_by_ospf if @devices.empty?
     end
 
     def self.transcompile(opts = {})
@@ -41,15 +41,15 @@ module Havox
     class << self
       private
 
-      def evaluate_topology
+      def infer_associations_by_ospf
         direct_ospf_routes = @rib.routes.select { |r| r.ospf? && r.direct? }
         grouped_routes = direct_ospf_routes.group_by(&:network)
         @topology.switch_ips.each do |switch_name, switch_ip|
-          infer_device_names(grouped_routes, switch_name, switch_ip)
+          associate_routers(grouped_routes, switch_name, switch_ip)
         end
       end
 
-      def infer_device_names(grouped_routes, switch_name, switch_ip)
+      def associate_routers(grouped_routes, switch_name, switch_ip)
         grouped_routes.each do |network_str, routes|
           network = IPAddr.new(network_str)
           if network.include?(switch_ip)

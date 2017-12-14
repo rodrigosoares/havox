@@ -27,6 +27,14 @@ describe Havox::DSL::DirectiveProxy do
   #   end
   # end
 
+  describe '#associate' do
+    it 'associates a routing instance to an underlying switch' do
+      associate_block = proc { associate :rfvmA, :s1 }
+      subject.instance_eval(&associate_block)
+      expect(Havox::Network.devices).to include('rfvmA' => 's1')
+    end
+  end
+
   describe '#topology' do
     before :each do
       allow(File).to receive(:exists?).and_call_original
