@@ -10,3 +10,6 @@
 /.ruby-version
 /.ruby-gemset
 /*.gem
+/*.dot
+/*.hvx
+/*.mln
