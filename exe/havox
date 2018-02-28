@@ -3,10 +3,30 @@
 require 'havox'
 require 'optparse'
 require 'ostruct'
+require_relative '../lib/havox/app/api'
 
 # Defines command options and parameters.
 args = OpenStruct.new
 OptionParser.new do |opt|
+  opt.separator ''
+  opt.separator <<-DESCRIPTION
+  Havox is a rule generator for Autonomous Systems supported by OpenFlow switches.
+  Based on a directives file written in its own DSL and a graph topology file, Havox
+  generates a set of OpenFlow rules to be installed in the underlying switches. Just
+  run the following command to start the Havox API web server:
+
+  havox
+
+  This will run the server on port 4567. It listens for HTTP requests to the /rules
+  route, POST method. The request should contain the directives file, the topology
+  file and a set of configuration parameters that define how the rules should be
+  formatted.
+
+  An alternative way to run Havox is by calling its rules-only mode (prints the rules
+  to the STDOUT) or using the Trema controller (yet experimental). See the options below.
+  DESCRIPTION
+  opt.separator ''
+
   opt.on('-c', '--trema-topo CONF', 'Trema topology configuration file') { |o| args.trema_topology = o }
   opt.on('-t', '--merlin-topo TOPO', 'Merlin topology file') { |o| args.merlin_topology = o }
   opt.on('-p', '--merlin-policy POLICY', 'Merlin policy file') { |o| args.merlin_policy = o }
@@ -31,7 +51,7 @@ def set_environment_vars(args)
   ENV['HAVOX_MERLIN_POLICY'] = args.merlin_policy
 end
 
-# Defines the main execution method.
+# Defines the Trema execution method.
 def start_trema!(args)
   puts 'Loading Havox with Trema...'
   cmd = 'trema run lib/trema/controllers/main_controller.rb' \
@@ -83,5 +103,5 @@ if args.rules_only
 elsif args.trema
   set_env_and_start_trema!(args)
 else
-  puts 'API in development.'
+  Havox::API.run!
 end
