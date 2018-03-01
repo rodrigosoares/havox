@@ -6,12 +6,10 @@ As part of a bigger architecture, Havox is designed to run as a web API that rec
 
 The mentioned architecture is composed of Havox, [RouteFlow](https://github.com/routeflow/RouteFlow) and [Merlin](https://github.com/merlin-lang/merlin), and currently tested in a [Mininet](https://github.com/mininet/mininet) environment with support of [MiniNext](https://github.com/USC-NSL/miniNExT) implementing Quagga routing engines. RouteFlow requests rules from Havox and therefore is a client, whereas Merlin is a dependency which effectively calculates the paths between the AS exits.
 
-----
 ## Development status
 
 Havox is still experimental, born from a [master's thesis](http://www2.uniriotec.br/ppgi/banco-de-dissertacoes-ppgi-unirio/ano-2017/havox-uma-arquitetura-para-orquestracao-de-trafego-em-redes-openflow/view), so it is being actively developed and improved. There is yet a lot of new functionalities to come.
 
-----
 ## How it works
 
 Havox is implemented in Ruby and is strongly based on metaprogramming concepts. The orchestration directives that forms its DSL are methods executed by the Ruby interpreter, having both values and entire blocks of code as parameters. The following code shows some Havox directives:
@@ -42,7 +40,6 @@ The exit directives from the request will be transcompiled to Merlin blocks of c
 
 More details about the transcompilation, parsing and formatting processes can be found [here](http://www2.uniriotec.br/ppgi/banco-de-dissertacoes-ppgi-unirio/ano-2017/havox-uma-arquitetura-para-orquestracao-de-trafego-em-redes-openflow/view) (master's thesis in brazilian portuguese).
 
-----
 ## Installation
 
 Install Havox by running:
@@ -59,7 +56,6 @@ It is *strongly recommended* to install Merlin, RouteFlow and Mininet/MiniNext i
 
 Setup all projects following their respective installation instructions. If using RouteFlow with Mininet, follow the [instructions](https://github.com/routeflow/RouteFlow/wiki/Tutorial-2:-rftest2) on setting Mininet up with RouteFlow remote controller.
 
-----
 ## Usage
 
 1. (HVX) Setup Merlin and RouteFlow IPs and etcetera in `config.rb`.
@@ -69,19 +65,16 @@ Setup all projects following their respective installation instructions. If usin
 
 If everything runs fine, RouteFlow will send a POST request to Havox, which in turn will log it and respond.
 
-----
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rspec --format d` to run the tests and read a little documentation about what each component does. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-----
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/rodrigosoares/havox.
 
 Be sure to follow [Ruby best practices](https://github.com/bbatsov/ruby-style-guide) and to create a spec test case for each new method, module or component you create.
 
-----
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
