@@ -42,11 +42,11 @@ More details about the transcompilation, parsing and formatting processes can be
 
 ## Installation
 
-Install Havox by running:
+Install Havox by:
 
-1. Clone the repository: `$ git clone https://github.com/rodrigosoares/havox`
-2. Access the directory: `$ cd havox`
-3. Install gem dependencies: `$ bin/setup`
+1. Cloning the repository: `$ git clone https://github.com/rodrigosoares/havox`
+2. Accessing the directory: `$ cd havox`
+3. Installing gem dependencies: `$ bin/setup`
 
 Besides, Havox requires [Merlin](https://github.com/merlin-lang/merlin) and a [modified version of RouteFlow](https://github.com/rodrigosoares/RouteFlow) that implements IP source and VLAN ID matching, subnet mask support and RFHavox module. The latter is an extra RouteFlow module designed to request rules from the remote Havox web API and enqueue them into the RouteFlow IPC system.
 
@@ -57,6 +57,8 @@ It is *strongly recommended* to install Merlin, RouteFlow and Mininet/MiniNext i
 Setup all projects following their respective installation instructions. If using RouteFlow with Mininet, follow the [instructions](https://github.com/routeflow/RouteFlow/wiki/Tutorial-2:-rftest2) on setting Mininet up with RouteFlow remote controller.
 
 ## Usage
+
+HVX, MN and RF are the environments running Havox, Mininet and RouteFlow, respectively.
 
 1. (HVX) Setup Merlin and RouteFlow IPs and etcetera in `config.rb`.
 2. (HVX) Start Havox API web server: `$ havox`.
