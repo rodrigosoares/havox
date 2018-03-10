@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'helpers/mock_helper'
+require 'tempfile'
 
 RSpec.configure { |c| c.include MockHelper }
 
