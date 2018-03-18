@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'colorize'
 require_relative '../../../config'
 require_relative 'helpers/api_helper'
 
