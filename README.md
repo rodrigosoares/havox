@@ -10,6 +10,8 @@ The mentioned architecture is composed of Havox, [RouteFlow](https://github.com/
 
 Havox is still experimental, born from a [master's thesis](http://www2.uniriotec.br/ppgi/banco-de-dissertacoes-ppgi-unirio/ano-2017/havox-uma-arquitetura-para-orquestracao-de-trafego-em-redes-openflow/view), so it is being actively developed and improved. There is yet a lot of new functionalities to come.
 
+If you want to check how it works, there's a [video tutorial in YouTube](https://youtu.be/Rtj7AjH5V6U) that shows how to set it up and run.
+
 ## How it works
 
 Havox is implemented in Ruby and is strongly based on metaprogramming concepts. The orchestration directives that forms its DSL are methods executed by the Ruby interpreter, having both values and entire blocks of code as parameters. The following code shows some Havox directives:
@@ -61,9 +63,9 @@ Setup all projects following their respective installation instructions. If usin
 HVX, MN and RF are the environments running Havox, Mininet and RouteFlow, respectively.
 
 1. (HVX) Setup Merlin and RouteFlow IPs and etcetera in `config.rb`.
-2. (HVX) Start Havox API web server: `$ havox`.
+2. (HVX) Start Havox API web server: `$ bundle exec havox`.
 3. (MN) Start Mininet, pointing its remote controller to the RouteFlow VM.
-4. (RF) Start RouteFlow: `sudo ./rftest2`.
+4. (RF) Start RouteFlow (e.g.: _example_2x2_): `sudo ./rftest/example_2x2`.
 
 If everything runs fine, RouteFlow will send a POST request to Havox, which in turn will log it and respond.
 
