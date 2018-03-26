@@ -81,4 +81,4 @@ Be sure to follow [Ruby best practices](https://github.com/bbatsov/ruby-style-gu
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [GPL 3.0 License](https://opensource.org/licenses/GPL-3.0).
