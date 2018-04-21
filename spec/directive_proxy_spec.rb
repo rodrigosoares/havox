@@ -9,9 +9,9 @@ describe Havox::DSL::DirectiveProxy do
   before(:each) { Havox::Network.reset! }
 
   describe '#exit' do
-    it 'parses a exit directive block' do
-      exit_block = proc { exit(:s1) { source_port 20 } }
-      subject.instance_eval(&exit_block)
+    it 'guides the matching packets from all sources to the chosen exit switch' do
+      exit_proc = proc { exit(:s1) { source_port 20 } }
+      subject.instance_eval(&exit_proc)
       directive = Havox::Network.directives.sample
       expect(directive).to be_instance_of(Havox::DSL::Directive)
       expect(directive.instance_variable_get(:@type)).to be(:exit)
@@ -20,12 +20,16 @@ describe Havox::DSL::DirectiveProxy do
     end
   end
 
-  # describe '#drop' do
-  #   it 'parses a drop directive block' do
-  #     pending 'Yet to be implemented'
-  #     expect(true).to be(false)
-  #   end
-  # end
+  describe '#drop' do
+    it 'discards the matching packets' do
+      pending 'Not yet implemented'
+      drop_block = proc { drop { source_port 20 } }
+      directive = Havox::Network.directives.sample
+      expect(directive).to be_instance_of(Havox::DSL::Directive)
+      expect(directive.instance_variable_get(:@type)).to be(:drop)
+      expect(directive.attributes).to include(source_port: 20)
+    end
+  end
 
   describe '#associate' do
     it 'associates a routing instance to an underlying switch' do
@@ -42,7 +46,7 @@ describe Havox::DSL::DirectiveProxy do
       allow(File).to receive(:read).with('/topo.dot').
         and_return(topology_file_content)
     end
-    it 'sets the network topology' do
+    it 'defined the network topology file' do
       topology_block = proc { topology '/topo.dot' }
       subject.instance_eval(&topology_block)
       expect(Havox::Network.topology).to be_instance_of(Havox::Topology)
