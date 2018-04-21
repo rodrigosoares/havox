@@ -28,7 +28,7 @@ describe Havox::Network do
     it 'returns the directive objects from the DSL' do
       directive = subject.directives.sample
       expect(directive).to be_instance_of(Havox::DSL::Directive)
-      expect(directive.switch).to be(:s1)
+      expect(directive.switches).to contain_exactly(:s1)
       expect(directive.attributes).to include(destination_port: 80)
     end
   end

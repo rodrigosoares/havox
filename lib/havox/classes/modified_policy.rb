@@ -13,12 +13,12 @@ module Havox
     private
 
     def arp_policy
-      Havox::DSL::Directive.new(nil, nil, ethernet_type: 2054).
+      Havox::DSL::Directive.new(nil, [], ethernet_type: 2054).
         to_block(@hosts, @hosts, 'min(100 Mbps)')
     end
 
     def icmp_policy
-      Havox::DSL::Directive.new(nil, nil, ethernet_type: 2048, ip_protocol: 1).
+      Havox::DSL::Directive.new(nil, [], ethernet_type: 2048, ip_protocol: 1).
         to_block(@hosts, @hosts, 'min(100 Mbps)')
     end
 

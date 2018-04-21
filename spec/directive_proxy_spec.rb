@@ -15,7 +15,7 @@ describe Havox::DSL::DirectiveProxy do
       directive = Havox::Network.directives.sample
       expect(directive).to be_instance_of(Havox::DSL::Directive)
       expect(directive.instance_variable_get(:@type)).to be(:exit)
-      expect(directive.switch).to be(:s1)
+      expect(directive.switches).to contain_exactly(:s1)
       expect(directive.attributes).to include(source_port: 20)
     end
   end

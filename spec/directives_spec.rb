@@ -18,5 +18,16 @@ describe Havox::DSL::Directive do
         'tcpDstPort = 80 -> .* s1 at min(1 Mbps);'
       )
     end
+
+    context 'when rendering a specific block for each orchestration directive' do
+      let(:exit_dir) { FactoryGirl.build(:directive, :exit, attrs: { source_port: 80 }) }
+
+      it 'renders from the :exit directive' do
+        expect(exit_dir.to_block(%w(h1 h2 h3), %w(h4), 'min(1 Mbps)')).to include(
+          'foreach (s, d): cross({ h1; h2; h3 }, { h4 })',
+          'tcpSrcPort = 80 -> .* s1 at min(1 Mbps);'
+        )
+      end
+    end
   end
 end

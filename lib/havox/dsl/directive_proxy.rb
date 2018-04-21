@@ -2,7 +2,7 @@ module Havox
   module DSL
     class DirectiveProxy
       def exit(switch, &block)
-        eval_directive(:exit, switch, &block)
+        eval_directive(:exit, [switch], &block)
       end
 
       # def drop(&block)
@@ -21,8 +21,8 @@ module Havox
 
       private
 
-      def eval_directive(type, switch, &block)
-        directive = Havox::DSL::Directive.new(type, switch)
+      def eval_directive(type, switches, &block)
+        directive = Havox::DSL::Directive.new(type, switches)
         directive.instance_eval(&block)
         Havox::Network.directives << directive
       end

@@ -1,7 +1,7 @@
 module Havox
   module DSL
     class Directive
-      attr_reader :switch, :attributes
+      attr_reader :switches, :attributes
 
       MERLIN_DIC = {
         destination_ip:   'ipDst',
@@ -17,9 +17,9 @@ module Havox
         vlan_priority:    'vlanPcp'
       }
 
-      def initialize(type, switch, attributes = {})
+      def initialize(type, switches, attributes = {})
         @type = type
-        @switch = switch
+        @switches = switches
         @attributes = attributes
       end
 
@@ -63,7 +63,7 @@ module Havox
       end
 
       def regex_path
-        ".* #{@switch.to_s}".strip
+        ".* #{@switches.join(' ')}".strip
       end
     end
   end

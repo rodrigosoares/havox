@@ -21,8 +21,9 @@ module Havox
 
     def self.transcompile(opts = {})
       @directives.map do |d|
-        src_hosts = @topology.host_names - @topology.hosts_by_switch[d.switch.to_s]
-        dst_hosts = @topology.hosts_by_switch[d.switch.to_s]
+        switch = d.switches.first.to_s
+        src_hosts = @topology.host_names - @topology.hosts_by_switch[switch]
+        dst_hosts = @topology.hosts_by_switch[switch]
         d.to_block(src_hosts, dst_hosts, opts[:qos])
       end
     end
