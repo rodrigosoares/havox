@@ -21,8 +21,8 @@ module Havox
 
     def self.transcompile(opts = {})
       @directives.map do |d|
-        src_hosts = @topology.host_names - @topology.switch_hosts[d.switch.to_s]
-        dst_hosts = @topology.switch_hosts[d.switch.to_s]
+        src_hosts = @topology.host_names - @topology.hosts_by_switch[d.switch.to_s]
+        dst_hosts = @topology.hosts_by_switch[d.switch.to_s]
         d.to_block(src_hosts, dst_hosts, opts[:qos])
       end
     end
@@ -44,7 +44,7 @@ module Havox
       def infer_associations_by_ospf
         direct_ospf_routes = @rib.routes.select { |r| r.ospf? && r.direct? }
         grouped_routes = direct_ospf_routes.group_by(&:network)
-        @topology.switch_ips.each do |switch_name, switch_ip|
+        @topology.ips_by_switch.each do |switch_name, switch_ip|
           associate_routers(grouped_routes, switch_name, switch_ip)
         end
       end

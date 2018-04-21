@@ -55,8 +55,8 @@ describe Havox::Network do
     it 'returns the parsed topology from the DSL' do
       expect(subject.topology).to be_instance_of(Havox::Topology)
       expect(subject.topology.host_names).to contain_exactly('h1', 'h2')
-      expect(subject.topology.switch_hosts).to include('s1' => ['h1'], 's2' => ['h2'])
-      expect(subject.topology.switch_ips).to include(
+      expect(subject.topology.hosts_by_switch).to include('s1' => ['h1'], 's2' => ['h2'])
+      expect(subject.topology.ips_by_switch).to include(
         's1' => '172.31.1.1',
         's2' => '172.31.2.1',
       )

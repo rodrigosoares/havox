@@ -16,14 +16,14 @@ module Havox
       @nodes.select(&:host?).map(&:name)
     end
 
-    def switch_ips
+    def ips_by_switch
       switches = @nodes.select(&:switch?)
       switch_ip_hash = {}
       switches.each { |s| switch_ip_hash[s.name] = s.attributes[:ip] }
       switch_ip_hash
     end
 
-    def switch_hosts
+    def hosts_by_switch
       exit_edges = @edges.select { |e| e.from.switch? && e.to.host? }
       hash = {}
       exit_edges.each do |e|

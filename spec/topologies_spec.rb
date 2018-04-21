@@ -27,15 +27,15 @@ describe Havox::Topology do
     end
   end
 
-  describe '#switch_ips' do
+  describe '#ips_by_switch' do
     it 'returns an hash of switches and their IP addresses' do
-      expect(subject.switch_ips).to eq({ 's1' => '10.0.0.3' })
+      expect(subject.ips_by_switch).to eq({ 's1' => '10.0.0.3' })
     end
   end
 
-  describe '#switch_hosts' do
+  describe '#hosts_by_switch' do
     it 'returns an hash of switches and their connected hosts array' do
-      expect(subject.switch_hosts).to eq({ 's1' => ['h1', 'h2']})
+      expect(subject.hosts_by_switch).to eq({ 's1' => ['h1', 'h2']})
     end
   end
 end
