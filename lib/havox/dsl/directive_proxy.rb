@@ -13,6 +13,10 @@ module Havox
         orchestration_directive(:tunnel, [src_switch, dst_switch], &block)
       end
 
+      def circuit(*switches, &block)
+        orchestration_directive(:circuit, switches, &block)
+      end
+
       def topology(file_path)
         raise_invalid_topology(file_path) unless File.exists?(file_path)
         topo = Havox::Topology.new(file_path)

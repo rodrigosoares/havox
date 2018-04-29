@@ -28,8 +28,10 @@ describe Havox::DSL::Directive do
     end
 
     context 'when rendering a specific block for each orchestration directive' do
-      let(:exit_dir)   { FactoryGirl.build(:directive, :exit) }
-      let(:tunnel_dir) { FactoryGirl.build(:directive, :tunnel) }
+      let(:exit_dir)       { FactoryGirl.build(:directive, :exit) }
+      let(:tunnel_dir)     { FactoryGirl.build(:directive, :tunnel) }
+      let(:circuit_dir)    { FactoryGirl.build(:directive, :circuit) }
+      let(:circuit_dir_wc) { FactoryGirl.build(:directive, :circuit, switches: [:s1, '.*', :s2]) }
 
       it 'renders from the :exit directive' do
         expect(exit_dir.render(topology, 'min(1 Mbps)')).to include(
@@ -42,6 +44,20 @@ describe Havox::DSL::Directive do
         expect(tunnel_dir.render(topology, 'min(1 Mbps)')).to include(
           'foreach (s, d): cross({ h1 }, { h2 })',
           'tcpDstPort = 80 -> .* s2 at min(1 Mbps);'
+        )
+      end
+
+      it 'renders from the :circuit directive' do
+        expect(circuit_dir.render(topology, 'min(1 Mbps)')).to include(
+          'foreach (s, d): cross({ h1 }, { h2 })',
+          'tcpDstPort = 80 -> s1 s3 s4 s2 at min(1 Mbps);'
+        )
+      end
+
+      it 'renders from the :circuit directive with wildcarded path' do
+        expect(circuit_dir_wc.render(topology, 'min(1 Mbps)')).to include(
+          'foreach (s, d): cross({ h1 }, { h2 })',
+          'tcpDstPort = 80 -> s1 .* s2 at min(1 Mbps);'
         )
       end
     end

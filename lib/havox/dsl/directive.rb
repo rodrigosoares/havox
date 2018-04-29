@@ -31,6 +31,7 @@ module Havox
         case @type
         when :exit then exit_policy(topology, qos)
         when :tunnel then tunnel_policy(topology, qos)
+        when :circuit then circuit_policy(topology, qos)
         else generic_policy(topology, qos)
         end
       end
@@ -49,6 +50,13 @@ module Havox
         src_hosts = topology.hosts_by_switch[@switches.first.to_s]
         dst_hosts = topology.hosts_by_switch[@switches.last.to_s]
         regex_path = ".* #{@switches.last}"
+        merlin_policy(src_hosts, dst_hosts, regex_path, qos)
+      end
+
+      def circuit_policy(topology, qos)
+        src_hosts = topology.hosts_by_switch[@switches.first.to_s]
+        dst_hosts = topology.hosts_by_switch[@switches.last.to_s]
+        regex_path = @switches.join(' ')
         merlin_policy(src_hosts, dst_hosts, regex_path, qos)
       end
 
