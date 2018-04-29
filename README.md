@@ -1,6 +1,6 @@
 # Havox
 
-Havox is a rule generator for Autonomous Systems supported by OpenFlow switches. Based on orchestration directives (or instructions) written in its own DSL, Havox generates a set of OpenFlow rules to be installed on the underlying switches.
+Havox is a rule generator for Autonomous Systems supported by OpenFlow switches. Based on orchestration directives (or instructions) written in its own configuration language, Havox generates a set of OpenFlow rules to be installed on the underlying switches.
 
 As part of a bigger architecture, Havox is designed to run as a web API that receives requests containing the directives, the topology graph description and some parameters for rule formatting. Once the rules are generated, the API responds with a JSON message containing all the rules, each one indicating which OpenFlow switch it should be installed on.
 
@@ -14,18 +14,20 @@ If you want to check how it works, there's a [video tutorial in YouTube](https:/
 
 ## How it works
 
-Havox is implemented in Ruby and is strongly based on metaprogramming concepts. The orchestration directives that forms its DSL are methods executed by the Ruby interpreter, having both values and entire blocks of code as parameters. The following code shows some Havox directives:
+Havox is implemented in Ruby and is strongly based on metaprogramming concepts. The orchestration directives that forms its configuration language are methods executed by the Ruby interpreter, having both values and entire blocks of code as parameters. The following code shows some Havox directives:
 
 ```ruby
 topology 'example.dot'
 associate :rfvmE, :s5
 
 exit(:s4) { destination_port 80 }
-
 exit(:s3) {
   source_ip '200.156.0.0/16'
   destination_ip '200.20.0.0/16'
 }
+
+tunnel(:s1, :s4) { source_port 443 }
+circuit(:s2, :s4, :s3) { destination_port 3306 }
 ```
 
 The first one, `topology <file_name>` is a topology file definition directive. It takes a string and specifies the topology description file that should be considered, which usually goes together with the directives file in the same request.
@@ -35,6 +37,10 @@ The second, `associate <router_name>, <switch_name>` is the router-switch associ
 Next, there are two orchestration directives that instructs the matching flow to leave the network by the indicated switch. The exit directive, `exit(<switch_name>) { <openflow_fields_and_values> }`, takes the switch name as a string or symbol and a block containing the supported OpenFlow fields and their respective matching values, which can be strings or integers depending on the field.
 
 For example, the first `exit` directive tells that any matching traffic with destination port 80 should leave the domain by the switch _s4_. The second `exit` directive tells that any packet that comes from the network 200.156/16 and heads to the network 200.20/16 must leave the domain by the switch _s3_.
+
+The tunnel directive, `tunnel(<inbound_switch_name>, <outbound_switch_name>) { <openflow_fields_and_values> }`, instructs matching packets that ingress the domain by the specified inbound switch to leave it through the specified outbound switch.
+
+The circuit directive, `circuit(<switch_names>) { <openflow_fields_and_values> }`, is similar to the tunnel directive, but the matching packets will flow through the specified path of switches, separated by commas. The path must be possible at the topology level, or an exception will be raised. In the example, matching packets ingressing by _s2_ must pass through _s4_ and then through _s3_ in order to leave the network.
 
 The topology file is a graph description file written in [DOT language](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) and describes how the network topology is organized. This file is processed by both Havox and its dependency, Merlin. Each node has informations like its name, its internal IP address from one of its interfaces and how it is connected to the other nodes. It is important to know that this IP address is used by Havox to infer the associations between routing containers and switches using OSPF routes. Otherwise, it would be required to manually associate each pair using the association directive described above.
 
