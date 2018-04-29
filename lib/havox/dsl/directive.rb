@@ -29,23 +29,38 @@ module Havox
 
       def render(topology, qos = nil)
         case @type
-        when :exit
-          switch = @switches.first.to_s
-          src_hosts = topology.host_names - topology.hosts_by_switch[switch]
-          dst_hosts = topology.hosts_by_switch[switch]
-          regex_path = ".* #{switch}"
-        when :tunnel
-          src_hosts = topology.hosts_by_switch[@switches.first.to_s]
-          dst_hosts = topology.hosts_by_switch[@switches.last.to_s]
-          regex_path = ".* #{@switches.last}"
-        else
-          src_hosts = dst_hosts = topology.host_names
-          regex_path = '.*'
+        when :exit then exit_policy(topology, qos)
+        when :tunnel then tunnel_policy(topology, qos)
+        else generic_policy(topology, qos)
         end
-        "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(regex_path, qos)}\n"
       end
 
       private
+
+      def exit_policy(topology, qos)
+        switch = @switches.first.to_s
+        src_hosts = topology.host_names - topology.hosts_by_switch[switch]
+        dst_hosts = topology.hosts_by_switch[switch]
+        regex_path = ".* #{switch}"
+        merlin_policy(src_hosts, dst_hosts, regex_path, qos)
+      end
+
+      def tunnel_policy(topology, qos)
+        src_hosts = topology.hosts_by_switch[@switches.first.to_s]
+        dst_hosts = topology.hosts_by_switch[@switches.last.to_s]
+        regex_path = ".* #{@switches.last}"
+        merlin_policy(src_hosts, dst_hosts, regex_path, qos)
+      end
+
+      def generic_policy(topology, qos)
+        src_hosts = dst_hosts = topology.host_names
+        regex_path = '.*'
+        merlin_policy(src_hosts, dst_hosts, regex_path, qos)
+      end
+
+      def merlin_policy(src_hosts, dst_hosts, regex_path, qos)
+        "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(regex_path, qos)}\n"
+      end
 
       def to_statement(regex_path, qos)
         fields = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{treated(v, k)}" }
