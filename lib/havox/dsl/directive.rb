@@ -59,24 +59,22 @@ module Havox
       end
 
       def merlin_policy(src_hosts, dst_hosts, regex_path, qos)
-        "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(regex_path, qos)}\n"
+        "#{foreach(src_hosts, dst_hosts)}\n  #{statement(regex_path, qos)}\n"
       end
 
-      def to_statement(regex_path, qos)
-        fields = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{treated(v, k)}" }
-        predicate = fields.join(' and ')
+      def statement(regex_path, qos)
+        matches = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{treated(v, k)}" }
+        predicate = matches.join(' and ')
         qos_str = qos.nil? ? '' : " at #{qos}"
         "#{predicate} -> #{regex_path}#{qos_str};"
       end
 
-      def format_hosts(host_names)
+      def host_arg(host_names)
         "{ #{host_names.join('; ')} }"
       end
 
-      def foreach_code(src_hosts, dst_hosts)
-        src_hosts_str = format_hosts(src_hosts)
-        dst_hosts_str = format_hosts(dst_hosts)
-        "foreach (s, d): cross(#{src_hosts_str}, #{dst_hosts_str})"
+      def foreach(src_hosts, dst_hosts)
+        "foreach (s, d): cross(#{host_arg(src_hosts)}, #{host_arg(dst_hosts)})"
       end
 
       def treated(value, field)

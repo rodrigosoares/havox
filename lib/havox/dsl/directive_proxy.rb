@@ -2,15 +2,15 @@ module Havox
   module DSL
     class DirectiveProxy
       def exit(switch, &block)
-        eval_directive(:exit, [switch], &block)
+        orchestration_directive(:exit, [switch], &block)
       end
 
       # def drop(&block)
-      #   eval_directive(:drop, nil, &block)
+      #   orchestration_directive(:drop, nil, &block)
       # end
 
       def tunnel(src_switch, dst_switch, &block)
-        eval_directive(:tunnel, [src_switch, dst_switch], &block)
+        orchestration_directive(:tunnel, [src_switch, dst_switch], &block)
       end
 
       def topology(file_path)
@@ -25,7 +25,7 @@ module Havox
 
       private
 
-      def eval_directive(type, switches, &block)
+      def orchestration_directive(type, switches, &block)
         directive = Havox::DSL::Directive.new(type, switches)
         directive.instance_eval(&block)
         Havox::Network.directives << directive
