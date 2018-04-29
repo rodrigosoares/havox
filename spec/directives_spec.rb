@@ -11,21 +11,30 @@ describe Havox::DSL::Directive do
     end
   end
 
-  describe '#to_block' do
+  describe '#render' do
+    let(:sw_host_map) { Hash['s1' => %w(h1), 's2' => %w(h2), 's3' => %w(h3), 's4' => %w(h4)] }
+    let(:topology) { double('topology') }
+
+    before :each do
+      allow(topology).to receive(:hosts_by_switch).and_return(sw_host_map)
+      allow(topology).to receive(:host_names).and_return(sw_host_map.values.flatten)
+    end
+
     it 'translates the attributes into a Merlin policy block' do
-      expect(directive.to_block(%w(h1 h2 h3), %w(h4), 'min(1 Mbps)')).to include(
-        'foreach (s, d): cross({ h1; h2; h3 }, { h4 })',
+      expect(directive.render(topology, 'min(1 Mbps)')).to include(
+        'foreach (s, d): cross({ h2; h3; h4 }, { h1 })',
         'tcpDstPort = 80 -> .* s1 at min(1 Mbps);'
       )
     end
 
     context 'when rendering a specific block for each orchestration directive' do
-      let(:exit_dir) { FactoryGirl.build(:directive, :exit, attrs: { source_port: 80 }) }
+      let(:exit_dir)   { FactoryGirl.build(:directive, :exit) }
+      let(:tunnel_dir) { FactoryGirl.build(:directive, :tunnel) }
 
       it 'renders from the :exit directive' do
-        expect(exit_dir.to_block(%w(h1 h2 h3), %w(h4), 'min(1 Mbps)')).to include(
-          'foreach (s, d): cross({ h1; h2; h3 }, { h4 })',
-          'tcpSrcPort = 80 -> .* s1 at min(1 Mbps);'
+        expect(exit_dir.render(topology, 'min(1 Mbps)')).to include(
+          'foreach (s, d): cross({ h2; h3; h4 }, { h1 })',
+          'tcpDstPort = 80 -> .* s1 at min(1 Mbps);'
         )
       end
     end

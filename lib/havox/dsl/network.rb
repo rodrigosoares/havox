@@ -20,12 +20,7 @@ module Havox
     end
 
     def self.transcompile(opts = {})
-      @directives.map do |d|
-        switch = d.switches.first.to_s
-        src_hosts = @topology.host_names - @topology.hosts_by_switch[switch]
-        dst_hosts = @topology.hosts_by_switch[switch]
-        d.to_block(src_hosts, dst_hosts, opts[:qos])
-      end
+      @directives.map { |d| d.render(@topology, opts[:qos]) }
     end
 
     def self.reachable(protocol = :bgp)

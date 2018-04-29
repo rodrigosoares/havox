@@ -9,5 +9,10 @@ FactoryGirl.define do
     trait :exit do
       type :exit
     end
+
+    trait :tunnel do
+      type     :tunnel
+      switches [:s1, :s2]
+    end
   end
 end

@@ -27,7 +27,16 @@ module Havox
         @attributes[name] = args.first
       end
 
-      def to_block(src_hosts, dst_hosts, qos = nil)
+      def render(topology, qos = nil)
+        case @type
+        when :exit
+          switch = @switches.first.to_s
+          src_hosts = topology.host_names - topology.hosts_by_switch[switch]
+          dst_hosts = topology.hosts_by_switch[switch]
+        else
+          src_hosts = topology.host_names
+          dst_hosts = topology.host_names
+        end
         "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(qos)}\n"
       end
 

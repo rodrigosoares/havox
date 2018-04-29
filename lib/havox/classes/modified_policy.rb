@@ -3,9 +3,8 @@ module Havox
     attr_reader :path
 
     def initialize(topology_file_path, policy_file_path)
-      @topology_file_path = topology_file_path
+      @topology = Havox::Topology.new(topology_file_path)
       @original_policy_file_path = policy_file_path
-      @hosts = parsed_hosts
       @path = nil
       append_basic_policies
     end
@@ -14,12 +13,12 @@ module Havox
 
     def arp_policy
       Havox::DSL::Directive.new(nil, [], ethernet_type: 2054).
-        to_block(@hosts, @hosts, 'min(100 Mbps)')
+        render(@topology, 'min(100 Mbps)')
     end
 
     def icmp_policy
       Havox::DSL::Directive.new(nil, [], ethernet_type: 2048, ip_protocol: 1).
-        to_block(@hosts, @hosts, 'min(100 Mbps)')
+        render(@topology, 'min(100 Mbps)')
     end
 
     def policies
@@ -34,11 +33,6 @@ module Havox
         tmp.puts policies.join("\n")
         @path = tmp.path
       end
-    end
-
-    def parsed_hosts
-      topology = Havox::Topology.new(@topology_file_path)
-      topology.host_names
     end
   end
 end

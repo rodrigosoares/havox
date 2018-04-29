@@ -77,7 +77,7 @@ describe Havox::Network do
   describe '.transcompile' do
     it 'transcompiles the directive objects into Merlin code' do
       directive = subject.directives.sample
-      expect(subject.transcompile).to include(directive.to_block(%w(h2), %w(h1)))
+      expect(subject.transcompile).to include(directive.render(subject.topology))
     end
   end
 
