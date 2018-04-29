@@ -33,16 +33,21 @@ module Havox
           switch = @switches.first.to_s
           src_hosts = topology.host_names - topology.hosts_by_switch[switch]
           dst_hosts = topology.hosts_by_switch[switch]
+          regex_path = ".* #{switch}"
+        when :tunnel
+          src_hosts = topology.hosts_by_switch[@switches.first.to_s]
+          dst_hosts = topology.hosts_by_switch[@switches.last.to_s]
+          regex_path = ".* #{@switches.last}"
         else
-          src_hosts = topology.host_names
-          dst_hosts = topology.host_names
+          src_hosts = dst_hosts = topology.host_names
+          regex_path = '.*'
         end
-        "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(qos)}\n"
+        "#{foreach_code(src_hosts, dst_hosts)}\n  #{to_statement(regex_path, qos)}\n"
       end
 
       private
 
-      def to_statement(qos)
+      def to_statement(regex_path, qos)
         fields = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{treated(v, k)}" }
         predicate = fields.join(' and ')
         qos_str = qos.nil? ? '' : " at #{qos}"
@@ -69,10 +74,6 @@ module Havox
 
       def netmask_removed(ip)
         IPAddr.new(ip).to_s
-      end
-
-      def regex_path
-        ".* #{@switches.join(' ')}".strip
       end
     end
   end

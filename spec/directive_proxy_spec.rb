@@ -31,6 +31,18 @@ describe Havox::DSL::DirectiveProxy do
     end
   end
 
+  describe '#tunnel' do
+    it 'guides the matching packets from a single source to the chosen exit switch' do
+      tunnel_proc = proc { tunnel(:s2, :s4) { source_port 20 } }
+      subject.instance_eval(&tunnel_proc)
+      directive = Havox::Network.directives.sample
+      expect(directive).to be_instance_of(Havox::DSL::Directive)
+      expect(directive.instance_variable_get(:@type)).to be(:tunnel)
+      expect(directive.switches).to match_array([:s2, :s4])
+      expect(directive.attributes).to include(source_port: 20)
+    end
+  end
+
   describe '#associate' do
     it 'associates a routing instance to an underlying switch' do
       associate_block = proc { associate :rfvmA, :s1 }

@@ -9,6 +9,10 @@ module Havox
       #   eval_directive(:drop, nil, &block)
       # end
 
+      def tunnel(src_switch, dst_switch, &block)
+        eval_directive(:tunnel, [src_switch, dst_switch], &block)
+      end
+
       def topology(file_path)
         raise_invalid_topology(file_path) unless File.exists?(file_path)
         topo = Havox::Topology.new(file_path)

@@ -37,6 +37,13 @@ describe Havox::DSL::Directive do
           'tcpDstPort = 80 -> .* s1 at min(1 Mbps);'
         )
       end
+
+      it 'renders from the :tunnel directive' do
+        expect(tunnel_dir.render(topology, 'min(1 Mbps)')).to include(
+          'foreach (s, d): cross({ h1 }, { h2 })',
+          'tcpDstPort = 80 -> .* s2 at min(1 Mbps);'
+        )
+      end
     end
   end
 end
