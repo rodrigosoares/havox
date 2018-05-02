@@ -11,6 +11,26 @@ describe Havox::DSL::Directive do
     end
   end
 
+  describe '#renderable?' do
+    let(:exit_directive)    { FactoryGirl.build(:directive, :exit) }
+    let(:tunnel_directive)  { FactoryGirl.build(:directive, :tunnel) }
+    let(:circuit_directive) { FactoryGirl.build(:directive, :circuit) }
+    let(:drop_directive)    { FactoryGirl.build(:directive, :drop) }
+
+    it 'tells if the directive can be rendered to Merlin code' do
+      expect(exit_directive).to be_renderable
+      expect(tunnel_directive).to be_renderable
+      expect(circuit_directive).to be_renderable
+      expect(drop_directive).not_to be_renderable
+    end
+  end
+
+  describe '#raw_matches' do
+    it 'returns the attributes as output Merlin matches' do
+      expect(directive.raw_matches(1)).to eq('switch = 1 and tcpDstPort = 80')
+    end
+  end
+
   describe '#render' do
     let(:sw_host_map) { Hash['s1' => %w(h1), 's2' => %w(h2), 's3' => %w(h3), 's4' => %w(h4)] }
     let(:topology) { double('topology') }

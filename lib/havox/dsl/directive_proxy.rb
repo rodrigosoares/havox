@@ -5,16 +5,16 @@ module Havox
         orchestration_directive(:exit, [switch], &block)
       end
 
-      # def drop(&block)
-      #   orchestration_directive(:drop, nil, &block)
-      # end
-
       def tunnel(src_switch, dst_switch, &block)
         orchestration_directive(:tunnel, [src_switch, dst_switch], &block)
       end
 
       def circuit(*switches, &block)
         orchestration_directive(:circuit, switches, &block)
+      end
+
+      def drop(&block)
+        orchestration_directive(:drop, [], &block)
       end
 
       def topology(file_path)

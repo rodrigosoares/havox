@@ -22,8 +22,8 @@ describe Havox::DSL::DirectiveProxy do
 
   describe '#drop' do
     it 'discards the matching packets' do
-      pending 'Not yet implemented'
-      drop_block = proc { drop { source_port 20 } }
+      drop_proc = proc { drop { source_port 20 } }
+      subject.instance_eval(&drop_proc)
       directive = Havox::Network.directives.sample
       expect(directive).to be_instance_of(Havox::DSL::Directive)
       expect(directive.instance_variable_get(:@type)).to be(:drop)

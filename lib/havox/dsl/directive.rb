@@ -17,6 +17,8 @@ module Havox
         vlan_priority:    'vlanPcp'
       }
 
+      MERLIN_RENDERABLE = [:exit, :tunnel, :circuit]
+
       def initialize(type, switches, attributes = {})
         @type = type
         @switches = switches
@@ -34,6 +36,15 @@ module Havox
         when :circuit then circuit_policy(topology, qos)
         else generic_policy(topology, qos)
         end
+      end
+
+      def renderable?
+        MERLIN_RENDERABLE.include?(@type)
+      end
+
+      def raw_matches(switch_id)
+        raw_attrs = @attributes.map { |k, v| "#{MERLIN_DIC[k]} = #{v}" }
+        "switch = #{switch_id} and #{raw_attrs.join(' and ')}"
       end
 
       private

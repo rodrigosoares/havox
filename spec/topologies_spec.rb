@@ -38,4 +38,12 @@ describe Havox::Topology do
       expect(subject.hosts_by_switch).to eq({ 's1' => ['h1', 'h2']})
     end
   end
+
+  describe '#border_switches' do
+    it 'returns only switches connected to hosts' do
+      expect(subject.border_switches.length).to eq(1)
+      expect(subject.border_switches.sample).to be_instance_of(Havox::Node)
+      expect(subject.border_switches.sample.name).to eq('s1')
+    end
+  end
 end

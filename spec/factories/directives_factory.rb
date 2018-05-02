@@ -19,5 +19,10 @@ FactoryGirl.define do
       type     :circuit
       switches [:s1, :s3, :s4, :s2]
     end
+
+    trait :drop do
+      type     :drop
+      switches []
+    end
   end
 end

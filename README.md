@@ -28,6 +28,7 @@ exit(:s3) {
 
 tunnel(:s1, :s4) { source_port 443 }
 circuit(:s2, :s4, :s3) { destination_port 3306 }
+drop { source_ip '146.164.0.0/16' }
 ```
 
 The first one, `topology <file_name>` is a topology file definition directive. It takes a string and specifies the topology description file that should be considered, which usually goes together with the directives file in the same request.
@@ -41,6 +42,8 @@ For example, the first `exit` directive tells that any matching traffic with des
 The tunnel directive, `tunnel(<inbound_switch_name>, <outbound_switch_name>) { <openflow_fields_and_values> }`, instructs matching packets that ingress the domain by the specified inbound switch to leave it through the specified outbound switch.
 
 The circuit directive, `circuit(<switch_names>) { <openflow_fields_and_values> }`, is similar to the tunnel directive, but the matching packets will flow through the specified path of switches, separated by commas. The path must be possible at the topology level, or an exception will be raised. In the example, matching packets ingressing by _s2_ must pass through _s4_ and then through _s3_ in order to leave the network.
+
+The drop directive, `drop { <openflow_fields_and_values> }`, discards matching packets right at the first switch through which they ingress in the domain.
 
 The topology file is a graph description file written in [DOT language](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) and describes how the network topology is organized. This file is processed by both Havox and its dependency, Merlin. Each node has informations like its name, its internal IP address from one of its interfaces and how it is connected to the other nodes. It is important to know that this IP address is used by Havox to infer the associations between routing containers and switches using OSPF routes. Otherwise, it would be required to manually associate each pair using the association directive described above.
 

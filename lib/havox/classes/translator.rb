@@ -11,8 +11,8 @@ module Havox
       translation_module(syntax)::Matches::FIELDS
     end
 
-    def matches_to(syntax, matches_array)
-      translation_module(syntax)::Matches.treat(matches_array)
+    def matches_to(syntax, matches_hash)
+      translation_module(syntax)::Matches.treat(matches_hash)
     end
 
     def actions_to(syntax, actions_array, opts = {})

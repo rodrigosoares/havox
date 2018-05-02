@@ -6,6 +6,7 @@ module Havox
       @opts = opts
       @rules = nil
       generate_rules
+      evaluate_not_renderable_directives
       check_ip_netmasks if Havox::Network.reachable.any?
     end
 
@@ -37,6 +38,12 @@ module Havox
       end
     end
 
+    def evaluate_not_renderable_directives
+      Havox::Network.directives.reject(&:renderable?).each do |directive|
+        add_drop_rules(directive) if directive.type.eql?(:drop)
+      end
+    end
+
     def src_ip
       Havox::Translator.instance.fields_to(@opts[:syntax])[MERLIN_IP_SRC]
     end
@@ -59,6 +66,15 @@ module Havox
         return network if IPAddr.new(network).include?(ip)
       end
       nil
+    end
+
+    def add_drop_rules(directive)
+      Havox::Topology.border_switches.each do |sw|
+        @rules << Havox::Rule.new(
+          "#{directive.raw_matches(sw.attributes[:id])} -> Drop(<none>)",
+          @opts
+        )
+      end
     end
 
     def has_key_but_nil?(matches, target_key)

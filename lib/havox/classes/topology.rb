@@ -24,7 +24,6 @@ module Havox
     end
 
     def hosts_by_switch
-      exit_edges = @edges.select { |e| e.from.switch? && e.to.host? }
       hash = {}
       exit_edges.each do |e|
         if hash[e.from.name].nil?
@@ -36,7 +35,15 @@ module Havox
       hash
     end
 
+    def border_switches
+      exit_edges.map(&:from).uniq
+    end
+
     private
+
+    def exit_edges
+      @edges.select { |e| e.from.switch? && e.to.host? }
+    end
 
     def parse_dot_file
       File.read(@file_path).each_line do |line|

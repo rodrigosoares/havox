@@ -20,7 +20,7 @@ module Havox
     end
 
     def self.transcompile(opts = {})
-      @directives.map { |d| d.render(@topology, opts[:qos]) }
+      @directives.select(&:renderable?).map { |d| d.render(@topology, opts[:qos]) }
     end
 
     def self.reachable(protocol = :bgp)

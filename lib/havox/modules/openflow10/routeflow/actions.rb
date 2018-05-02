@@ -12,6 +12,7 @@ module Havox
               when 'Output' then basic_action(:output, obj[:arg_a].to_i)
               when 'Enqueue' then output_or_enqueue(obj, opts[:output])
               when 'SetField' then basic_action_from_set_field(obj)
+              when 'Drop' then basic_action(:drop)
               else raise_unknown_action(obj)
               end
           end
