@@ -1,7 +1,7 @@
 module Havox
   class Route
     attr_reader :network, :via, :interface, :protocol, :best, :fib, :raw,
-      :timestamp, :router, :recursive_via
+      :timestamp, :router, :recursive_via, :parsed
 
     IP_REGEX = /([0-9]{1,3}\.){3}[0-9]{1,3}/
     TYPE_CHAR_REGEX = /^[\w\s]/
@@ -24,6 +24,7 @@ module Havox
       @router = router
       @opts = opts
       @raw = raw
+      @parsed = false
       parse_raw_entry
     end
 
@@ -32,6 +33,8 @@ module Havox
       "#{@protocol.upcase}: to #{@network} #{connection} in " \
       "#{@interface || @recursive_via}#{', BEST' if @best}" \
       "#{', FIB route' if @fib}"
+    rescue
+      "RAW: #{@raw}"
     end
 
     def inspect
@@ -60,8 +63,11 @@ module Havox
 
     def parse_raw_entry
       parsed_entry = @raw.match(ROUTE_REGEX)
-      evaluate_protocol(parsed_entry[:flags])
-      evaluate_route_attributes(parsed_entry)
+      if !parsed_entry.nil?
+        evaluate_protocol(parsed_entry[:flags])
+        evaluate_route_attributes(parsed_entry)
+        @parsed = true
+      end
     end
 
     def evaluate_protocol(flags_str)
