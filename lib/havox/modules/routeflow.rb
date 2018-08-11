@@ -25,6 +25,8 @@ module Havox
       end
     end
 
+    ARP_REGEX = /(?<ip>[\d\.]+)\s(?<mac>[\w:]+)/
+
     def self.run(command)
       output = nil
       ssh_connection { |ssh| output = ssh.exec!(command) }
@@ -45,6 +47,17 @@ module Havox
         routes += raw_routes.map { |rr| Havox::Route.new(rr, vm_name, opts) }
       end
       routes
+    end
+
+    # OPTIMIZE: Is it OK to trust the first line of the returned results is the needed one?
+    def self.arp_table(vm_names, interface)
+      entries = {}
+      vm_names.each do |vm_name|
+        result = run(cmd.arp_awk(vm_name, interface))
+        result = result.each_line.map { |l| l.match(ARP_REGEX) }.compact.first
+        entries[result[:ip].to_s] = result[:mac].to_s
+      end
+      entries
     end
   end
 end

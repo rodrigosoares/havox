@@ -33,4 +33,14 @@ describe Havox::RouteFlow do
       expect(bar_vm_routes).to be_empty
     end
   end
+
+  describe '.arp_table' do
+    it 'returns a map of IP addresses to MAC addresses' do
+      allow(Net::SSH).to receive(:start).and_yield(ssh_connection)
+      allow(ssh_connection).to receive(:exec!).and_return(container_arp_response)
+      expect(subject.arp_table(['foo_vm'], 'eth0')).to eq({
+        '192.168.1.10' => 'a0:a0:a0:a0:a0:a0'
+      })
+    end
+  end
 end

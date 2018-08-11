@@ -77,6 +77,10 @@ module MockHelper
     "  172.31.4.0/24 [110/10] is directly connected, eth1, 03:41:39\n"
   end
 
+  def container_arp_response
+    "192.168.1.10 a0:a0:a0:a0:a0:a0\n192.168.1.20 b0:b0:b0:b0:b0:b0"
+  end
+
   private
 
   def openflow_rules(empty)
