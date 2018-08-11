@@ -5,6 +5,13 @@ module Havox
         vtysh_run(vm_name, "show ip route #{protocol}")
       end
 
+      def arp_awk(vm_name, interface)
+        rf_command(
+          vm_name,
+          "/usr/sbin/arp -ni #{interface} | grep #{interface} | awk '{print $1, $3}'"
+        )
+      end
+
       def vtysh_run(vm_name, command)
         rf_command(vm_name, "/usr/bin/vtysh -c '#{command}'")
       end
