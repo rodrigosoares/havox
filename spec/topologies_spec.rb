@@ -21,6 +21,13 @@ describe Havox::Topology do
     end
   end
 
+  describe '#hosts' do
+    it 'returns only host nodes' do
+      types_of_returned_nodes = subject.hosts.map(&:type).uniq
+      expect(types_of_returned_nodes).to contain_exactly(:host)
+    end
+  end
+
   describe '#host_names' do
     it 'returns the parsed host names' do
       expect(subject.host_names).to contain_exactly('h1', 'h2')

@@ -12,8 +12,12 @@ module Havox
       parse_dot_file
     end
 
+    def hosts
+      @nodes.select(&:host?)
+    end
+
     def host_names
-      @nodes.select(&:host?).map(&:name)
+      hosts.map(&:name)
     end
 
     def ips_by_switch
