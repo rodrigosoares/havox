@@ -8,6 +8,13 @@ describe Havox::Network do
   let(:route_2)    { FactoryGirl.build(:route, :direct, router: 'rfvmB', network: '172.31.2.0/24') }
   let(:bgp_route)  { FactoryGirl.build(:route, :bgp, network: '200.156.0.0/16', via: '172.31.1.100') }
 
+  let :arp_map do
+    { '172.31.1.100' => 'a1:a1:a1:a1:a1:a1',
+      '172.31.2.100' => 'b1:b1:b1:b1:b1:b1',
+      '172.31.3.100' => 'c1:c1:c1:c1:c1:c1',
+      '172.31.4.100' => 'd1:d1:d1:d1:d1:d1' }
+  end
+
   let :definition_block do
     proc do
       topology 'topo.dot'
@@ -18,6 +25,7 @@ describe Havox::Network do
 
   before :each do
     allow(Havox::RouteFlow).to receive(:ribs).and_return([route_1, route_2, bgp_route])
+    allow(Havox::RouteFlow).to receive(:arp_table).and_return(arp_map)
     allow(File).to receive(:exists?).with('topo.dot').and_return(true)
     allow(File).to receive(:read).with('topo.dot').
       and_return(topo_2h_2sw_content)

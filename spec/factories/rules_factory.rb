@@ -48,5 +48,13 @@ FactoryGirl.define do
 
       raw { "(switch = #{dp_id} and vlanId = #{vlan_vid}) -> #{actions.join(' ')}" }
     end
+
+    trait :outbound do
+      # transient do
+      #   actions ['SetField()']
+      # end
+
+      # raw { "(switch = #{dp_id} ->" }
+    end
   end
 end

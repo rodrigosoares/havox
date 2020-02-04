@@ -7,6 +7,7 @@ module Havox
       @rules = nil
       generate_rules
       evaluate_not_renderable_directives
+      set_destination_mac_addresses
       check_ip_netmasks if Havox::Network.reachable.any?
     end
 
@@ -69,12 +70,43 @@ module Havox
     end
 
     def add_drop_rules(directive)
-      Havox::Topology.border_switches.each do |sw|
+      Havox::Network.topology.border_switches.each do |sw|
         @rules << Havox::Rule.new(
           "#{directive.raw_matches(sw.attributes[:id])} -> Drop(<none>)",
           @opts
         )
       end
+    end
+
+    # TODO: The action set below is compatible only with RouteFlow.
+    def set_destination_mac_addresses
+      @rules.select(&:outbound?).each do |rule|
+        host_mac = target_host_mac(rule)
+        rule.actions.unshift({
+          action: :set_eth_dst,
+          arg_a: host_mac,
+          arg_b: nil
+        }) # RouteFlow
+      end
+    end
+
+    # TODO: This should be independent of the switch name and not rely on only one host.
+    def target_host_name(rule)
+      Havox::Network.topology.hosts_by_switch["s#{rule.dp_id}"].first
+    end
+
+    def target_host_ip(rule)
+      name = target_host_name(rule)
+      Havox::Network.topology
+        .hosts
+        .select { |host| host.name.eql?(name) }
+        .first
+        .attributes[:ip]
+    end
+
+    def target_host_mac(rule)
+      ip = target_host_ip(rule)
+      Havox::Network.rib.arp_table[ip]
     end
 
     def has_key_but_nil?(matches, target_key)

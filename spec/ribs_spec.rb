@@ -12,6 +12,9 @@ describe Havox::RIB do
     allow(Havox::RouteFlow).to receive(:ribs).with(
       %w(foo_vm bar_vm), anything
     ).and_return([route, bgp_route])
+    allow(Havox::RouteFlow).to receive(:arp_table).with(
+      %w(foo_vm bar_vm), anything
+    ).and_return({ '192.168.1.10' => 'a0:a0:a0:a0:a0:a0' })
   end
 
   describe '.new' do

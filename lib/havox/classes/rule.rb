@@ -1,12 +1,13 @@
 module Havox
   class Rule
-    attr_reader :matches, :actions, :dp_id, :raw
+    attr_reader :matches, :actions, :dp_id, :type, :raw
 
     def initialize(raw, opts = {})
       @opts = opts
       @syntax = @opts[:syntax] || :trema
       @matches = parsed_matches(raw)
       @actions = parsed_actions(raw)
+      @type = rule_type
       @dp_id = @matches[:dp_id].to_i
       @matches.delete(:dp_id)
       @raw = raw.strip
@@ -27,6 +28,10 @@ module Havox
 
     def to_h
       { dp_id: @dp_id, matches: @matches, actions: @actions }
+    end
+
+    def outbound?
+      @type.eql?(:outbound)
     end
 
     private
@@ -61,6 +66,11 @@ module Havox
 
     def translate
       Havox::Translator.instance
+    end
+
+    # NOTE: Improve, Havox will support VLAN-MPLS changing
+    def rule_type
+      @actions.map { |a| a[:action] }.include?(:strip_vlan) ? :outbound : :other
     end
 
     def already_set?(matches_hash, stmt)
