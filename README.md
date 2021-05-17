@@ -8,7 +8,7 @@ The mentioned architecture is composed of Havox, [RouteFlow](https://github.com/
 
 ## Development status
 
-Havox is still experimental, born from a [master's thesis](http://www2.uniriotec.br/ppgi/banco-de-dissertacoes-ppgi-unirio/ano-2017/havox-uma-arquitetura-para-orquestracao-de-trafego-em-redes-openflow/view), so it is being actively developed and improved. There is yet a lot of new functionalities to come.
+Havox is still experimental, born from a [master's thesis](https://ppgi.uniriotec.br/download/2862/), so it is being actively developed and improved. There is yet a lot of new functionalities to come.
 
 If you want to check how it works, there's a [video tutorial in YouTube](https://youtu.be/Rtj7AjH5V6U) that shows how to set it up and run.
 
